@@ -21,10 +21,7 @@ class TempoMarking(val min: Int, val max: Int, val name: String) {
         )
 
 
-        fun getTempoMarkingFromBpm(bpm: Int) : TempoMarking {
-            return tempos.filter { it.bpmIsInRange(bpm) }
-                    .last()
-        }
+        fun fromBpm(bpm: Int) : TempoMarking = tempos.filter { it.bpmIsInRange(bpm) }.last()
 
     }
     fun bpmIsInRange(bpm: Int) : Boolean {

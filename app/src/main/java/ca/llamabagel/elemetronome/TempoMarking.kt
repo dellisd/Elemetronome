@@ -6,7 +6,8 @@ package ca.llamabagel.elemetronome
  */
 class TempoMarking(val min: Int, val max: Int, val name: String) {
     companion object {
-        val tempos = listOf<TempoMarking>(TempoMarking(1, 24, "Larghissimo"),
+        val tempos = listOf<TempoMarking>(
+                TempoMarking(1, 24, "Larghissimo"),
                 TempoMarking(25, 50, "Grave"),
                 TempoMarking(51, 55, "Largo"),
                 TempoMarking(56, 60, "Larghetto"),
@@ -20,9 +21,7 @@ class TempoMarking(val min: Int, val max: Int, val name: String) {
                 TempoMarking(171, Int.MAX_VALUE, "Prestissimmo")
         )
 
-
         fun fromBpm(bpm: Int) : TempoMarking = tempos.filter { it.bpmIsInRange(bpm) }.last()
-
     }
     fun bpmIsInRange(bpm: Int) : Boolean {
         return bpm in min..max

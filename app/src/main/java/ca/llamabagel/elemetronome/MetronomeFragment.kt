@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.fragment_metronome.*
 
 /**
  * Created by derek on 5/24/2017.
+ * The fragment that contains everything metronome-related
  */
 class MetronomeFragment : Fragment() {
     companion object {
@@ -49,6 +50,8 @@ class MetronomeFragment : Fragment() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
+        // Set the initial text being displayed on the screen
+        bpmText.text = getString(R.string.metronome_tempo, (60 / (interval / 1000.0f)).toInt())
         tempoName.text = TempoMarking.fromBpm((60 / (interval / 1000.0f)).toInt()).name
     }
 }

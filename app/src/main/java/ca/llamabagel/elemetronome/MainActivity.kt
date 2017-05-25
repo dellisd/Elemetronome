@@ -6,6 +6,8 @@ import android.media.AudioManager
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.support.v4.view.ViewPager
 
 import kotlinx.android.synthetic.main.activity_main.*

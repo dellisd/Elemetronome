@@ -12,7 +12,7 @@ class TempoMarking(val min: Int, val max: Int, val name: String) {
                 TempoMarking(51, 55, "Largo"),
                 TempoMarking(56, 60, "Larghetto"),
                 TempoMarking(61, 70, "Adagio"),
-                TempoMarking(71, 75, "Andante"),
+                TempoMarking(71, 85, "Andante"),
                 TempoMarking(86, 100, "Moderato"),
                 TempoMarking(101, 115, "Allegretto"),
                 TempoMarking(116, 140, "Allegro"),

@@ -51,19 +51,19 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        /*// Request audio recording permissions (for the actual tuner and stuff)
+        // Request audio recording permissions (for the actual tuner and stuff)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(permissions, REQUEST_RECORD_AUDIO_PERMISSION)
-        }*/
+        }
     }
 
-    /*override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             REQUEST_RECORD_AUDIO_PERMISSION -> grantResults[0] == PackageManager.PERMISSION_GRANTED
         }
 
         if (!permissionToRecordAccepted) finish()
-    }*/
+    }
 }

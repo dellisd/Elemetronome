@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "995338756665",
+    "firebase_url": "https://elemetronome.firebaseio.com",
+    "project_id": "elemetronome",
+    "storage_bucket": "elemetronome.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:995338756665:android:20e56a0814314fc3",
+        "android_client_info": {
+          "package_name": "ca.llamabagel.elemetronome"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "995338756665-k7vldclc5e7t6autofkkcepktarh832t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ca.llamabagel.elemetronome",
+            "certificate_hash": "21b5cd72aecc51a68a5acbc6e733b4ac978ab790"
+          }
+        },
+        {
+          "client_id": "995338756665-q4qa3gsdftosvmjno5eiuqeu7tluhkkf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfYYB_dFQvpHfJDCn0dAJsX92ERngQb-k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "995338756665-q4qa3gsdftosvmjno5eiuqeu7tluhkkf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

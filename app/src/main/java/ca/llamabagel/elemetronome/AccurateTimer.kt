@@ -7,44 +7,65 @@ import android.os.SystemClock
 /**
  * Created by isaac on 5/24/2017.
  */
-abstract class AccurateTimer(val countDownInterval: Long, var timeOfNextTick: Long = SystemClock.uptimeMillis() + countDownInterval, private var handler: Handler = Handler()) {
+abstract class AccurateTimer(val countDownInterval: Long, var timeOfNextTick: Long = SystemClock.uptimeMillis() + countDownInterval, private var handler: Handler) {
+    /**
+     * The message code for the ticking of the timer
+     */
     companion object {
         const val MSG = 1
     }
 
-    @Synchronized fun start() : AccurateTimer {
-        handler.sendMessageAtTime(handler.obtainMessage(MSG), timeOfNextTick);
-        return this;
-    }
-
-    fun cancel() {
-        handler.removeCallbacks(null);
-    }
-
     init {
-        handler = Handler();
-        val runnableCode = object : Runnable {
-            override fun run() {
-                val code = handler.obtainMessage().what;
-                if (code == 1){
-                    synchronized(AccurateTimer){
-                        onTick();
+        /**
+         * Handles the timing of the message being sent, and calls the onTick method when
+         * receiving a message.
+         */
+        handler = object : Handler() {
+            override fun handleMessage(msg: Message) {
+                val code = msg.what
 
-                        val currentTime = SystemClock.uptimeMillis();
+                // If this is a tick message
+                if (code == 1) {
+                    synchronized(this@AccurateTimer) {
+                        onTick()
+
+                        // Make sure that the time of the next tick is in the future
+                        val currentTime = SystemClock.uptimeMillis()
                         do {
-                            timeOfNextTick += countDownInterval;
-                        } while (currentTime > timeOfNextTick);
+                            timeOfNextTick += countDownInterval
+                        } while (currentTime > timeOfNextTick)
 
-                        handler.sendMessageAtTime(handler.obtainMessage(MSG), timeOfNextTick);
+                        sendMessageAtTime(obtainMessage(MSG), timeOfNextTick)
                     }
                 }
             }
         }
-        handler.postAtTime(runnableCode, timeOfNextTick);
     }
 
-    abstract fun onTick();
+    /**
+     * Starts the repeated sending of messages at the specified interval
+     */
+    @Synchronized fun start() : AccurateTimer {
+        handler.sendMessageAtTime(handler.obtainMessage(MSG), timeOfNextTick)
+        return this
+    }
 
-    abstract fun onFinish();
+    /**
+     * Stops the handler from sending more messages and calls the onFinish method defined by the user
+     */
+    fun cancel() {
+        handler.removeCallbacks(null)
+        onFinish()
+    }
+
+    /**
+     * Should be implemented by user
+     */
+    abstract fun onTick()
+
+    /**
+     * Should be implemented by user
+     */
+    abstract fun onFinish()
 
 }

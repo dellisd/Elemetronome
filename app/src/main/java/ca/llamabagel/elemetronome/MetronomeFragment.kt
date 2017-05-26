@@ -8,6 +8,8 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.SeekBar
 import kotlinx.android.synthetic.main.fragment_metronome.*
 
@@ -34,29 +36,44 @@ class MetronomeFragment : Fragment() {
     private var idk_youCanMakeAThICCC_t1ckIfUWant: Boolean = false
 
     // The defaul interval in ms (this is 120BPM)
-    var interval = 500
+    var interval: Long = 500
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater!!.inflate(R.layout.fragment_metronome, container, false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+
+        // Create the animation that makes the screen pulsate
+        val fadeOut = AnimationUtils.loadAnimation(activity, R.anim.fade_out)
+
+        // Make sure that the duration is set to something reasonable from the start
+        fadeOut.duration = interval
+
         tempoSeekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                interval = ((60.0f / (progress + 1)) * 1000).toInt()
+                interval = ((60.0f / (progress + 1)) * 1000).toLong()
+
+                // Change the interval of the fadeOut animation
+                fadeOut.duration = interval
 
                 metronomeTimer?.cancel()
-                metronomeTimer = object: AccurateTimer(SystemClock.uptimeMillis(), interval.toLong()) {
+                metronomeTimer = object: AccurateTimer(SystemClock.uptimeMillis(), interval) {
                     override fun onTick() {
                         toneGenerator.startTone(ToneGenerator.TONE_DTMF_0, 15)
+
+                        // Make the screen pulsate
+                        backgroundImage.startAnimation(fadeOut)
                     }
 
                     // Doesn't need to be implemented as the interval until finish is extremely long
                     override fun onFinish() {}
                 }
 
+
                 // Start the timer
-                metronomeTimer?.start()
+                if (idk_youCanMakeAThICCC_t1ckIfUWant)
+                    metronomeTimer?.start()
 
                 bpmText.text = getString(R.string.metronome_tempo, progress + 1)
 
@@ -74,12 +91,19 @@ class MetronomeFragment : Fragment() {
 
         metronomeButton.setOnClickListener { _ ->
             idk_youCanMakeAThICCC_t1ckIfUWant = !idk_youCanMakeAThICCC_t1ckIfUWant
+            if (!idk_youCanMakeAThICCC_t1ckIfUWant)
+                backgroundImage.setAlpha(0.0f)
+            else
+                backgroundImage.setAlpha(0.4f)
 
             if (idk_youCanMakeAThICCC_t1ckIfUWant) {
                 if (metronomeTimer == null) {
-                    metronomeTimer = object: AccurateTimer(SystemClock.uptimeMillis(), interval.toLong()) {
+                    metronomeTimer = object: AccurateTimer(SystemClock.uptimeMillis(), interval) {
                         override fun onTick() {
                             toneGenerator.startTone(ToneGenerator.TONE_DTMF_0, 15)
+
+                            // Make the screen pulsate
+                            backgroundImage.startAnimation(fadeOut)
                         }
 
                         // Doesn't need to be implemented as the interval until finish is extremely long

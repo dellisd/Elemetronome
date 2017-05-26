@@ -24,9 +24,12 @@ class TunerFragment() : Fragment() {
     private val handler = Handler()
 
     val runnable: Thread = object: Thread() {
-        val amp = getAmplitude()
+        override fun run() {
+            val amp = getAmplitude()
+            amplitude.text = amp.toString()
 
-
+            handler.postDelayed(this, 100)
+        }
     }
 
     companion object {
@@ -87,11 +90,12 @@ class TunerFragment() : Fragment() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (activity.checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
                 getLiveAudioFeed()
-                // TODO: Start runnable
+                if (!runnable.isAlive) runnable.start()
+
             }
         } else {
             getLiveAudioFeed()
-            // TODO: Start runnable
+            if (!runnable.isAlive) runnable.start()
         }
     }
 

@@ -68,7 +68,7 @@ class MetronomeFragment : Fragment() {
         bpmText.text = getString(R.string.metronome_tempo, (60 / (interval / 1000.0f)).toInt())
         tempoName.text = TempoMarking.fromBpm((60 / (interval / 1000.0f)).toInt()).name
 
-        metronomeButton.setOnClickListener { v ->
+        metronomeButton.setOnClickListener { _ ->
             idk_youCanMakeAThICCC_t1ckIfUWant = !idk_youCanMakeAThICCC_t1ckIfUWant
 
             if (idk_youCanMakeAThICCC_t1ckIfUWant) {

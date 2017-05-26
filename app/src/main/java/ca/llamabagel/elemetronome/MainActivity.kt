@@ -33,12 +33,12 @@ class MainActivity : AppCompatActivity() {
         viewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {}
 
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+
+            override fun onPageSelected(position: Int) {
                 val ids = listOf(R.id.navigation_metronome, R.id.navigation_tuner, R.id.navigation_tempo)
                 navigation.selectedItemId = ids[position]
             }
-
-            override fun onPageSelected(position: Int) {}
         })
 
         navigation.setOnNavigationItemSelectedListener { item ->

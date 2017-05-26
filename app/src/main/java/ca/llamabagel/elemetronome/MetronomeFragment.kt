@@ -28,6 +28,8 @@ class MetronomeFragment : Fragment() {
 
     private val toneGenerator: ToneGenerator = ToneGenerator(AudioManager.STREAM_MUSIC, 100)
 
+    private var metronomeTimer: AccurateTimer? = null
+
     // The defaul interval in ms (this is 120BPM)
     var interval = 500
 
@@ -39,6 +41,16 @@ class MetronomeFragment : Fragment() {
         tempoSeekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 interval = ((60.0f / (progress + 1)) * 1000).toInt()
+
+                metronomeTimer?.cancel()
+                metronomeTimer = object: AccurateTimer(Long.MAX_VALUE / 2, interval.toLong()) {
+                    override fun onTick() {
+                        toneGenerator.startTone(ToneGenerator.TONE_DTMF_0, 5)
+                    }
+
+                    // Doesn't need to be implemented as the interval until finish is extremely long
+                    override fun onFinish() {}
+                }
 
                 bpmText.text = getString(R.string.metronome_tempo, progress + 1)
 

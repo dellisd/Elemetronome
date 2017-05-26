@@ -3,6 +3,7 @@ package ca.llamabagel.elemetronome
 import android.media.AudioManager
 import android.media.ToneGenerator
 import android.os.Bundle
+import android.os.SystemClock
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -45,14 +46,17 @@ class MetronomeFragment : Fragment() {
                 interval = ((60.0f / (progress + 1)) * 1000).toInt()
 
                 metronomeTimer?.cancel()
-                metronomeTimer = object: AccurateTimer(Long.MAX_VALUE / 2, interval.toLong()) {
+                metronomeTimer = object: AccurateTimer(SystemClock.uptimeMillis(), interval.toLong()) {
                     override fun onTick() {
-                        toneGenerator.startTone(ToneGenerator.TONE_DTMF_0, 5)
+                        toneGenerator.startTone(ToneGenerator.TONE_DTMF_0, 15)
                     }
 
                     // Doesn't need to be implemented as the interval until finish is extremely long
                     override fun onFinish() {}
                 }
+
+                // Start the timer
+                metronomeTimer?.start()
 
                 bpmText.text = getString(R.string.metronome_tempo, progress + 1)
 
@@ -73,9 +77,9 @@ class MetronomeFragment : Fragment() {
 
             if (idk_youCanMakeAThICCC_t1ckIfUWant) {
                 if (metronomeTimer == null) {
-                    metronomeTimer = object: AccurateTimer(Long.MAX_VALUE / 2, interval.toLong()) {
+                    metronomeTimer = object: AccurateTimer(SystemClock.uptimeMillis(), interval.toLong()) {
                         override fun onTick() {
-                            toneGenerator.startTone(ToneGenerator.TONE_DTMF_0, 5)
+                            toneGenerator.startTone(ToneGenerator.TONE_DTMF_0, 15)
                         }
 
                         // Doesn't need to be implemented as the interval until finish is extremely long

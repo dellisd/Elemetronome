@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
 
     // Audio recording permission stuff
     var permissionToRecordAccepted = false
-    val permissions = arrayOf<String>(Manifest.permission.RECORD_AUDIO)
+    val permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

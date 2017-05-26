@@ -30,6 +30,8 @@ class MetronomeFragment : Fragment() {
 
     private var metronomeTimer: AccurateTimer? = null
 
+    private var idk_youCanMakeAThICCC_t1ckIfUWant: Boolean = false
+
     // The defaul interval in ms (this is 120BPM)
     var interval = 500
 
@@ -65,5 +67,29 @@ class MetronomeFragment : Fragment() {
         // Set the initial text being displayed on the screen
         bpmText.text = getString(R.string.metronome_tempo, (60 / (interval / 1000.0f)).toInt())
         tempoName.text = TempoMarking.fromBpm((60 / (interval / 1000.0f)).toInt()).name
+
+        metronomeButton.setOnClickListener { v ->
+            idk_youCanMakeAThICCC_t1ckIfUWant = !idk_youCanMakeAThICCC_t1ckIfUWant
+
+            if (idk_youCanMakeAThICCC_t1ckIfUWant) {
+                if (metronomeTimer == null) {
+                    metronomeTimer = object: AccurateTimer(Long.MAX_VALUE / 2, interval.toLong()) {
+                        override fun onTick() {
+                            toneGenerator.startTone(ToneGenerator.TONE_DTMF_0, 5)
+                        }
+
+                        // Doesn't need to be implemented as the interval until finish is extremely long
+                        override fun onFinish() {}
+                    }
+                }
+
+                metronomeTimer?.start()
+                metronomeButton.text = getString(R.string.metronome_stop)
+            } else {
+                metronomeTimer?.cancel()
+
+                metronomeButton.text = getString(R.string.metronome_start)
+            }
+        }
     }
 }

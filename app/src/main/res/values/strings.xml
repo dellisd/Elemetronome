@@ -4,4 +4,6 @@
     <string name="title_tuner">Tuner</string>
     <string name="title_tempo">Tempo</string>
     <string name="metronome_tempo">%d BPM</string>
+    <string name="metronome_stop">Stop</string>
+    <string name="metronome_start">Start</string>
 </resources>

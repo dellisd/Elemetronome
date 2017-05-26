@@ -7,7 +7,7 @@ import android.os.SystemClock
 /**
  * Created by isaac on 5/24/2017.
  */
-abstract class AccurateTimer(val countDownInterval: Long, var timeOfNextTick: Long = SystemClock.uptimeMillis() + countDownInterval) {
+abstract class AccurateTimer(var timeOfNextTick: Long = SystemClock.uptimeMillis(), val countDownInterval: Long) {
     /**
      * The message code for the ticking of the timer
      */
@@ -18,6 +18,9 @@ abstract class AccurateTimer(val countDownInterval: Long, var timeOfNextTick: Lo
     private var handler: Handler
 
     init {
+        // Make sure that we update the next time that the timer should tick
+        timeOfNextTick += countDownInterval
+
         /**
          * Handles the timing of the message being sent, and calls the onTick method when
          * receiving a message.
@@ -56,7 +59,7 @@ abstract class AccurateTimer(val countDownInterval: Long, var timeOfNextTick: Lo
      * Stops the handler from sending more messages and calls the onFinish method defined by the user
      */
     fun cancel() {
-        handler.removeCallbacks(null)
+        handler.removeMessages(MSG)
         onFinish()
     }
 

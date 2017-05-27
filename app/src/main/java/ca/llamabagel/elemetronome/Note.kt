@@ -51,19 +51,19 @@ enum class Note(val value: Int, val letter: String, val simple: Boolean, val typ
          */
         fun note(frequency: Double): PitchData {
             var octave = 4
-            var noteValue = A.value;
-            var semitones: Int = (Math.log(frequency / A4) / Math.log(a)).toInt()
+            var noteValue = A.value
+            var semitones: Int = Math.round(Math.log(frequency / A4) / Math.log(a)).toInt()
 
-            if (semitones-- > 0) {
-                while (semitones > 0) {
-                    if (noteValue++ > 11) {
+            if (semitones > 0) {
+                while (semitones-- > 0) {
+                    if (++noteValue > 11) {
                         octave++
                         noteValue = 0
                     }
                 }
             } else {
                 while (semitones++ < 0) {
-                    if (noteValue-- < 0) {
+                    if (--noteValue < 0) {
                         octave--
                         noteValue = 11
                     }
@@ -75,7 +75,7 @@ enum class Note(val value: Int, val letter: String, val simple: Boolean, val typ
             // Sets each note's octave
             notes.forEach { it.octave = octave }
 
-            return PitchData(notes, frequency - notes.last().frequency())
+            return PitchData(notes, frequency - notes.last().frequency(octave))
         }
     }
 
@@ -90,7 +90,7 @@ enum class Note(val value: Int, val letter: String, val simple: Boolean, val typ
      */
     fun frequency(octave: Int): Double {
         var semitones = 0
-        var noteValue = value;
+        var noteValue = value
         var noteOctave = octave
 
         // Calculate the number of semitones between the current note and A4 with the given octave
@@ -126,7 +126,7 @@ enum class Note(val value: Int, val letter: String, val simple: Boolean, val typ
      */
     fun frequency(): Double {
         var semitones = 0
-        var noteValue = value;
+        var noteValue = value
         var noteOctave = octave
 
         // Calculate the number of semitones between the current note and A4 with the given octave

@@ -16,14 +16,14 @@ class FFT {
             if (n % 2 != 0) throw RuntimeException("n is not a power of 2")
 
             val even = Array<Complex>(n / 2) { Complex(0.0, 0.0) }
-            for (k in 0..n / 2) {
-                even[k] = x[2 * k]
+            for (k in 0 until n / 2) {
+                even[k] = if (2 * k < x.size) x[2 * k] else Complex(0.0, 0.0)
             }
 
             val q = fft(even)
 
             val odd = even
-            for (k in 0..n / 2) {
+            for (k in 0 until n / 2) {
                 odd[k] = x[2 * k + 1]
             }
 

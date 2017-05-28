@@ -3,6 +3,7 @@ package ca.llamabagel.elemetronome
 /**
  * Created by derek on 5/27/2017.
  * An enum class containing useful information about note names and frequencies
+ * TODO: Probably shouldn't be an enum. Should have static copies of notes that can be reused. (vars don't work so well in enums)
  *
  * @param value A numerical representation of the note for doing math on notes
  * @param letter The letter name of the note. e.g. C, A#

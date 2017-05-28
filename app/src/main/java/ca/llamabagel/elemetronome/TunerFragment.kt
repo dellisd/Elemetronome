@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_tuner.*
+import org.jtransforms.fft.DoubleFFT_1D
 
 /**
  * Created by derek on 5/25/2017.
@@ -23,10 +24,37 @@ class TunerFragment() : Fragment() {
 
     private val handler = Handler()
 
+    /**
+     * Buffer size
+     */
+    private val minBufferSize = AudioRecord.getMinBufferSize(
+            8000,
+            AudioFormat.CHANNEL_IN_MONO,
+            AudioFormat.ENCODING_PCM_16BIT
+    )
+
     val runnable: Thread = object: Thread() {
         override fun run() {
-            val amp = getAmplitude()
-            amplitude.text = amp.toString()
+            android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO)
+            val buffer = ShortArray(minBufferSize)
+            audioRecord?.read(buffer, 0, minBufferSize)
+
+            val fft = DoubleFFT_1D(minBufferSize.toLong())
+            val bufferD = DoubleArray(buffer.size) { buffer[it].toDouble() }
+            fft.realForward(bufferD)
+
+            var max = 0.0
+            var maxIndex = 0
+            for (i in 0 until bufferD.size) {
+                if (Math.abs(bufferD[i]) > max) {
+                    max = Math.abs(bufferD[i])
+                    maxIndex = i;
+                }
+            }
+
+            activity.runOnUiThread {
+                amplitude?.text = Note.note(maxIndex * 44100.0 / bufferD.size).toString()
+            }
 
             handler.postDelayed(this, 100)
         }
@@ -56,6 +84,7 @@ class TunerFragment() : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         audioRecord?.stop()
+        audioRecord?.release()
     }
 
     override fun onPause() {
@@ -77,7 +106,7 @@ class TunerFragment() : Fragment() {
 
         audioRecord = AudioRecord(
                 MediaRecorder.AudioSource.MIC,
-                8000,
+                44100,
                 AudioFormat.CHANNEL_IN_MONO,
                 AudioFormat.ENCODING_PCM_16BIT,
                 minBufferSize
@@ -90,30 +119,41 @@ class TunerFragment() : Fragment() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (activity.checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
                 getLiveAudioFeed()
-                if (!runnable.isAlive) runnable.start()
+                if (runnable.state == Thread.State.NEW) runnable.start()
 
             }
         } else {
             getLiveAudioFeed()
-            if (!runnable.isAlive) runnable.start()
+            if (runnable.state == Thread.State.NEW) runnable.start()
         }
     }
 
     private fun getAmplitude(): Double {
-        val minBufferSize = AudioRecord.getMinBufferSize(
-                8000,
-                AudioFormat.CHANNEL_IN_MONO,
-                AudioFormat.ENCODING_PCM_16BIT
-        )
-
         val buffer = ShortArray(minBufferSize)
         audioRecord?.read(buffer, 0, minBufferSize)
 
         var max = 0
-        for (s in buffer) {
-            if (Math.abs(s.toInt()) > max) max = Math.abs(s.toInt())
-        }
+        buffer
+                .asSequence()
+                .filter { Math.abs(it.toInt()) > max }
+                .forEach { max = Math.abs(it.toInt()) }
 
         return max.toDouble()
+    }
+
+    private fun getFrequency(): Double {
+        val buffer = ShortArray(minBufferSize)
+        audioRecord?.read(buffer, 0, minBufferSize)
+
+        val fftTempArray = Array<Complex>(minBufferSize) { Complex(buffer[it].toDouble(), 0.0) }
+
+        val fftArray = FFT.fft(fftTempArray)
+        val magnitude = DoubleArray(fftArray.size) { fftArray[it].abs() }
+
+        for (d in magnitude) {
+            amplitude?.append(d.toString() + "hz, ")
+        }
+
+        return 0.0
     }
 }

@@ -31,6 +31,7 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.google.firebase:firebase-core:10.0.1'
+    compile 'com.github.wendykierp:JTransforms:3.1'
     testCompile 'junit:junit:4.12'
 }
 repositories {

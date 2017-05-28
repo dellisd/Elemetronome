@@ -1,7 +1,6 @@
 package ca.llamabagel.elemetronome
 
 import android.media.AudioManager
-import android.media.ToneGenerator
 import android.os.Bundle
 import android.os.SystemClock
 import android.support.v4.app.Fragment
@@ -29,9 +28,7 @@ class MetronomeFragment : Fragment() {
         }
     }
 
-    private val toneGenerator: ToneGenerator = ToneGenerator(AudioManager.STREAM_MUSIC, 100)
-
-    private var metronomeTimer: AccurateTimer? = null
+    private var metronomeTimer: Metronome? = null
 
     private var idk_youCanMakeAThICCC_t1ckIfUWant: Boolean = false
 
@@ -57,23 +54,18 @@ class MetronomeFragment : Fragment() {
                 // Change the interval of the fadeOut animation
                 fadeOut.duration = interval
 
-                metronomeTimer?.cancel()
-                metronomeTimer = object: AccurateTimer(SystemClock.uptimeMillis(), interval) {
+                metronomeTimer?.stop()
+                metronomeTimer = object: Metronome((progress + 1).toDouble(), 4, 523.25, 587.33) {
                     override fun onTick() {
-                        toneGenerator.startTone(ToneGenerator.TONE_DTMF_0, 15)
-
                         // Make the screen pulsate
                         backgroundImage.startAnimation(fadeOut)
                     }
-
-                    // Doesn't need to be implemented as the interval until finish is extremely long
-                    override fun onFinish() {}
                 }
 
 
                 // Start the timer
                 if (idk_youCanMakeAThICCC_t1ckIfUWant)
-                    metronomeTimer?.start()
+                    metronomeTimer?.play()
 
                 bpmText.text = getString(R.string.metronome_tempo, progress + 1)
 
@@ -98,23 +90,18 @@ class MetronomeFragment : Fragment() {
 
             if (idk_youCanMakeAThICCC_t1ckIfUWant) {
                 if (metronomeTimer == null) {
-                    metronomeTimer = object: AccurateTimer(SystemClock.uptimeMillis(), interval) {
+                    metronomeTimer = object: Metronome((60 / (interval / 1000.0)), 4, 523.25, 587.33) {
                         override fun onTick() {
-                            toneGenerator.startTone(ToneGenerator.TONE_DTMF_0, 15)
-
                             // Make the screen pulsate
                             backgroundImage.startAnimation(fadeOut)
                         }
-
-                        // Doesn't need to be implemented as the interval until finish is extremely long
-                        override fun onFinish() {}
                     }
                 }
 
-                metronomeTimer?.start()
+                metronomeTimer?.play()
                 metronomeButton.text = getString(R.string.metronome_stop)
             } else {
-                metronomeTimer?.cancel()
+                metronomeTimer?.stop()
 
                 metronomeButton.text = getString(R.string.metronome_start)
             }

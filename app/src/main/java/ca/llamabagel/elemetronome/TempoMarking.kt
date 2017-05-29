@@ -2,7 +2,7 @@ package ca.llamabagel.elemetronome
 
 /**
  * Created by derek on 5/24/2017.
- * Encapsulation of various tempo markings with ranges of tempos in BPM
+ * Encapsulation of various tempo markings with ranges of tempos in STARTING_BPM
  */
 class TempoMarking(val min: Int, val max: Int, val name: String) {
     companion object {

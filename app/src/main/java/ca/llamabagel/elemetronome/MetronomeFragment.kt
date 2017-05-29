@@ -1,13 +1,13 @@
 package ca.llamabagel.elemetronome
 
-import android.media.AudioManager
+import android.app.ActivityManager
+import android.app.Service
+import android.content.Intent
 import android.os.Bundle
-import android.os.SystemClock
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.SeekBar
 import kotlinx.android.synthetic.main.fragment_metronome.*
@@ -28,12 +28,15 @@ class MetronomeFragment : Fragment() {
         }
     }
 
-    private var metronomeTimer: Metronome? = null
+    private var metronomeServiceTimer: MetronomeService? = null
 
     private var idk_youCanMakeAThICCC_t1ckIfUWant: Boolean = false
 
     // The defaul interval in ms (this is 120BPM)
     var interval: Long = 500
+
+    // The BPM that the metronome should be at
+    var BPM = 120
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater!!.inflate(R.layout.fragment_metronome, container, false)
@@ -51,25 +54,17 @@ class MetronomeFragment : Fragment() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 interval = ((60.0f / (progress + 1)) * 1000).toLong()
 
+                BPM = progress + 1
+
                 // Change the interval of the fadeOut animation
                 fadeOut.duration = interval
 
-                metronomeTimer?.stop()
-                metronomeTimer = object: Metronome((progress + 1).toDouble(), 4, 523.25, 587.33) {
-                    override fun onTick() {
-                        // Make the screen pulsate
-                        backgroundImage.startAnimation(fadeOut)
-                    }
-                }
+                // Start the metronome
+                changeMetronomeBPM((progress + 1).toDouble(), idk_youCanMakeAThICCC_t1ckIfUWant)
 
+                bpmText.text = getString(R.string.metronome_tempo, BPM)
 
-                // Start the timer
-                if (idk_youCanMakeAThICCC_t1ckIfUWant)
-                    metronomeTimer?.play()
-
-                bpmText.text = getString(R.string.metronome_tempo, progress + 1)
-
-                tempoName.text = TempoMarking.fromBpm(progress + 1).name
+                tempoName.text = TempoMarking.fromBpm(BPM).name
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -83,14 +78,14 @@ class MetronomeFragment : Fragment() {
 
         metronomeButton.setOnClickListener { _ ->
             idk_youCanMakeAThICCC_t1ckIfUWant = !idk_youCanMakeAThICCC_t1ckIfUWant
-            if (!idk_youCanMakeAThICCC_t1ckIfUWant)
+            /*if (!idk_youCanMakeAThICCC_t1ckIfUWant)
                 backgroundImage.setAlpha(0.0f)
             else
-                backgroundImage.setAlpha(0.4f)
+                backgroundImage.setAlpha(0.4f)*/
 
             if (idk_youCanMakeAThICCC_t1ckIfUWant) {
-                if (metronomeTimer == null) {
-                    metronomeTimer = object: Metronome((60 / (interval / 1000.0)), 4, 523.25, 587.33) {
+                if (metronomeServiceTimer == null) {
+                    metronomeServiceTimer = object: MetronomeService((60 / (interval / 1000.0)), 4, 523.25, 587.33) {
                         override fun onTick() {
                             // Make the screen pulsate
                             backgroundImage.startAnimation(fadeOut)
@@ -98,13 +93,26 @@ class MetronomeFragment : Fragment() {
                     }
                 }
 
-                metronomeTimer?.play()
+                metronomeServiceTimer?.play()
                 metronomeButton.text = getString(R.string.metronome_stop)
             } else {
-                metronomeTimer?.stop()
+                metronomeServiceTimer?.stop()
 
                 metronomeButton.text = getString(R.string.metronome_start)
             }
         }
+    }
+
+    private fun stopMetronome() {
+        val stopMetronomeIntent = Intent(activity, MetronomeService::class.java)
+        stopMetronomeIntent.putExtra(MetronomeService.STOP_METRONOME, true)
+        activity.startService(stopMetronomeIntent)
+    }
+
+    private fun changeMetronomeBPM(newBPM: Double, shouldStartAfterChange: Boolean){
+        val changeMetronomeBPMIntent = Intent(activity, MetronomeService::class.java)
+        changeMetronomeBPMIntent.putExtra(MetronomeService.NEW_BPM, newBPM)
+        changeMetronomeBPMIntent.putExtra(MetronomeService.SHOULD_START_AFTER_BPM_CHANGE, shouldStartAfterChange)
+        activity.startService(changeMetronomeBPMIntent)
     }
 }

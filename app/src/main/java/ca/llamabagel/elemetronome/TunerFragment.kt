@@ -43,18 +43,25 @@ class TunerFragment() : Fragment() {
             val bufferD = DoubleArray(buffer.size) { buffer[it].toDouble() }
             fft.realForward(bufferD)
 
-            var max = 0.0
-            var maxIndex = 0
-            for (i in 0 until bufferD.size) {
-                if (Math.abs(bufferD[i]) > max) {
-                    max = Math.abs(bufferD[i])
-                    maxIndex = i;
+            // Find the index of the maximum magnitude
+            var max = Double.NEGATIVE_INFINITY
+            var maxIndex = -1
+            for (i in 0 until bufferD.size / 2) {
+                // The real component
+                val re = bufferD[2*i]
+                // The imaginary component
+                val im = bufferD[2*i+1]
+                val mag = Math.sqrt(re*re +im*im)
+
+                if (mag > max) {
+                    max = mag
+                    maxIndex = i
                 }
             }
 
             activity.runOnUiThread {
-                amplitude?.text = Note.note(maxIndex * 44100.0 / bufferD.size).toString()
                 noteName?.text = Note.note(maxIndex * 44100.0 / bufferD.size).note.first().letter
+                amplitude?.text = Note.note(maxIndex * 44100.0 / (bufferD.size / 2)).toString()
             }
 
             handler.postDelayed(this, 100)

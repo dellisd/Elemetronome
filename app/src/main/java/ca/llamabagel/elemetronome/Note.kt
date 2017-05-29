@@ -10,30 +10,33 @@ package ca.llamabagel.elemetronome
  * @param simple Whether the note name associated is "simple". Like, who the hell uses B#?
  * @param octave The octave in which the note belongs. Default is 4 (like A4).
  */
-enum class Note(val value: Int, val letter: String, val simple: Boolean, val type: Type, var octave: Int = 4) {
-    B_SHARP(0, "B#", false, Type.SHARP),
-    C(0, "C", true, Type.NATURAL),
-    C_SHARP(1, "C#", true, Type.SHARP),
-    D_FLAT(1, "D♭", false, Type.FLAT),
-    D(2, "D", true, Type.NATURAL),
-    D_SHARP(3, "D#", true, Type.SHARP),
-    E_FLAT(3, "E♭", true, Type.FLAT),
-    E(4, "E", true, Type.NATURAL),
-    F_FLAT(4, "F♭", false, Type.FLAT),
-    E_SHARP(5, "E#", false, Type.FLAT),
-    F(5, "F", true, Type.NATURAL),
-    F_SHARP(6, "F#", true, Type.SHARP),
-    G_FLAT(6, "G♭", true, Type.FLAT),
-    G(7, "G", true, Type.NATURAL),
-    G_SHARP(8, "G#", true, Type.SHARP),
-    A_FLAT(8, "A♭", true, Type.FLAT),
-    A(9, "A", true, Type.NATURAL),
-    A_SHARP(10, "A#", true, Type.SHARP),
-    B_FLAT(10, "B♭", true, Type.FLAT),
-    B(11, "B", true, Type.NATURAL),
-    C_FLAT(11, "C♭", false, Type.FLAT);
-
+class Note(val value: Int, val letter: String, val simple: Boolean, val type: Type, var octave: Int = 4) {
     companion object {
+        val B_SHARP = Note(0, "B#", false, Type.SHARP)
+        val C = Note(0, "C", true, Type.NATURAL)
+        val C_SHARP = Note(1, "C#", true, Type.SHARP)
+        val D_FLAT = Note(1, "D♭", false, Type.FLAT)
+        val D = Note(2, "D", true, Type.NATURAL)
+        val D_SHARP = Note(3, "D#", true, Type.SHARP)
+        val E_FLAT = Note(3, "E♭", true, Type.FLAT)
+        val E = Note(4, "E", true, Type.NATURAL)
+        val F_FLAT = Note(4, "F♭", false, Type.FLAT)
+        val E_SHARP = Note(5, "E#", false, Type.FLAT)
+        val F = Note(5, "F", true, Type.NATURAL)
+        val F_SHARP = Note(6, "F#", true, Type.SHARP)
+        val G_FLAT = Note(6, "G♭", true, Type.FLAT)
+        val G = Note(7, "G", true, Type.NATURAL)
+        val G_SHARP = Note(8, "G#", true, Type.SHARP)
+        val A_FLAT = Note(8, "A♭", true, Type.FLAT)
+        val A = Note(9, "A", true, Type.NATURAL)
+        val A_SHARP = Note(10, "A#", true, Type.SHARP)
+        val B_FLAT = Note(10, "B♭", true, Type.FLAT)
+        val B = Note(11, "B", true, Type.NATURAL)
+        val C_FLAT = Note(11, "C♭", false, Type.FLAT)
+
+        var notes = arrayOf(B_SHARP, C, C_SHARP, D_FLAT, D, D_SHARP, E_FLAT, E, F_FLAT, E_SHARP,
+                F, F_SHARP, G_FLAT, G, G_SHARP, A_FLAT, A, A_SHARP, B_FLAT, B, C_FLAT)
+
         /**
          * Standard tuning frequency. Can be adjusted for other standards (e.g. 442 Hz)
          */
@@ -71,7 +74,7 @@ enum class Note(val value: Int, val letter: String, val simple: Boolean, val typ
                 }
             }
 
-            val notes = Note.values().filter { it.value == noteValue }
+            val notes = Note.notes.filter { it.value == noteValue }
 
             // Sets each note's octave
             notes.forEach { it.octave = octave }

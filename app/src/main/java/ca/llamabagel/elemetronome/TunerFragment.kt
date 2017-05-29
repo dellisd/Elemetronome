@@ -54,6 +54,7 @@ class TunerFragment() : Fragment() {
 
             activity.runOnUiThread {
                 amplitude?.text = Note.note(maxIndex * 44100.0 / bufferD.size).toString()
+                noteName?.text = Note.note(maxIndex * 44100.0 / bufferD.size).note.first().letter
             }
 
             handler.postDelayed(this, 100)

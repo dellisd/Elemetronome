@@ -140,20 +140,4 @@ class TunerFragment() : Fragment() {
 
         return max.toDouble()
     }
-
-    private fun getFrequency(): Double {
-        val buffer = ShortArray(minBufferSize)
-        audioRecord?.read(buffer, 0, minBufferSize)
-
-        val fftTempArray = Array<Complex>(minBufferSize) { Complex(buffer[it].toDouble(), 0.0) }
-
-        val fftArray = FFT.fft(fftTempArray)
-        val magnitude = DoubleArray(fftArray.size) { fftArray[it].abs() }
-
-        for (d in magnitude) {
-            amplitude?.append(d.toString() + "hz, ")
-        }
-
-        return 0.0
-    }
 }

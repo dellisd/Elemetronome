@@ -7,7 +7,7 @@ import android.os.SystemClock
 /**
  * Created by isaac on 5/24/2017.
  */
-abstract class AccurateTimer(var timeOfNextTick: Long = SystemClock.uptimeMillis(), val countDownInterval: Long) {
+abstract class AccurateTimer(var timeOfNextTick: Long = SystemClock.uptimeMillis(), var countDownInterval: Long) {
     /**
      * The message code for the ticking of the timer
      */

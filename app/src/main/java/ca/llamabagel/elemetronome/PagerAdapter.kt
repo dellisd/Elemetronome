@@ -12,7 +12,7 @@ class PagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     override fun getItem(position: Int): Fragment {
         return when (position) {
             0 -> MetronomeFragment.newInstance("M1")
-            1 -> MetronomeFragment.newInstance("M2")
+            1 -> TunerFragment.newInstance("M2")
             else -> MetronomeFragment.newInstance("M3")
         }
     }

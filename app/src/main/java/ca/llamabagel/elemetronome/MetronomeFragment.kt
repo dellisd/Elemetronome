@@ -3,7 +3,10 @@ package ca.llamabagel.elemetronome
 import android.app.ActivityManager
 import android.app.Service
 import android.content.Intent
+import android.media.AudioManager
+import android.media.ToneGenerator
 import android.os.Bundle
+import android.os.SystemClock
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -28,9 +31,16 @@ class MetronomeFragment : Fragment() {
         }
     }
 
-    private var metronomeServiceTimer: MetronomeService? = null
+    private val toneGenerator: ToneGenerator = ToneGenerator(AudioManager.STREAM_MUSIC, 100)
+
+    private var metronomeTimer: AccurateTimer? = null
 
     private var idk_youCanMakeAThICCC_t1ckIfUWant: Boolean = false
+
+    private var toneDurationInMillis = 15
+    private var animationDurationInMillis: Long = 0
+
+    private var metronomeIsSilenced = true
 
     // The defaul interval in ms (this is 120BPM)
     var interval: Long = 500
@@ -43,24 +53,41 @@ class MetronomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        animationDurationInMillis = interval - 100
 
         // Create the animation that makes the screen pulsate
         val fadeOut = AnimationUtils.loadAnimation(activity, R.anim.fade_out)
 
-        // Make sure that the duration is set to something reasonable from the start
-        fadeOut.duration = interval
+        // Initialize the metronomeTimer
+        metronomeTimer = object: AccurateTimer(SystemClock.uptimeMillis(), interval) {
+            override fun onTick() {
+                if (!metronomeIsSilenced) {
+                    toneGenerator.startTone(ToneGenerator.TONE_DTMF_0, toneDurationInMillis)
+
+                    // Make sure that the duration is set to something reasonable from the start
+                    fadeOut.duration = animationDurationInMillis
+
+                    // Make the screen pulsate
+                    backgroundImage.startAnimation(fadeOut)
+                }
+            }
+
+            override fun onFinish() {}
+        }
+
+        // Start the timer in the background
+        metronomeTimer?.start()
 
         tempoSeekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                // Update interval
                 interval = ((60.0f / (progress + 1)) * 1000).toLong()
 
+                // Update animation duration
+                animationDurationInMillis = interval - 100
+
+                // Update BPM
                 BPM = progress + 1
-
-                // Change the interval of the fadeOut animation
-                fadeOut.duration = interval
-
-                // Start the metronome
-                changeMetronomeBPM((progress + 1).toDouble(), idk_youCanMakeAThICCC_t1ckIfUWant)
 
                 bpmText.text = getString(R.string.metronome_tempo, BPM)
 
@@ -78,41 +105,22 @@ class MetronomeFragment : Fragment() {
 
         metronomeButton.setOnClickListener { _ ->
             idk_youCanMakeAThICCC_t1ckIfUWant = !idk_youCanMakeAThICCC_t1ckIfUWant
-            /*if (!idk_youCanMakeAThICCC_t1ckIfUWant)
+            if (!idk_youCanMakeAThICCC_t1ckIfUWant) {
                 backgroundImage.setAlpha(0.0f)
-            else
-                backgroundImage.setAlpha(0.4f)*/
 
-            if (idk_youCanMakeAThICCC_t1ckIfUWant) {
-                if (metronomeServiceTimer == null) {
-                    metronomeServiceTimer = object: MetronomeService((60 / (interval / 1000.0)), 4, 523.25, 587.33) {
-                        override fun onTick() {
-                            // Make the screen pulsate
-                            backgroundImage.startAnimation(fadeOut)
-                        }
-                    }
-                }
-
-                metronomeServiceTimer?.play()
-                metronomeButton.text = getString(R.string.metronome_stop)
-            } else {
-                metronomeServiceTimer?.stop()
+                // Make sure that the animation and the tone can't be heard
+                metronomeIsSilenced = true
 
                 metronomeButton.text = getString(R.string.metronome_start)
             }
+            else {
+                backgroundImage.setAlpha(0.4f)
+
+                // Make sure metronome can be heard
+                metronomeIsSilenced = false
+
+                metronomeButton.text = getString(R.string.metronome_stop)
+            }
         }
-    }
-
-    private fun stopMetronome() {
-        val stopMetronomeIntent = Intent(activity, MetronomeService::class.java)
-        stopMetronomeIntent.putExtra(MetronomeService.STOP_METRONOME, true)
-        activity.startService(stopMetronomeIntent)
-    }
-
-    private fun changeMetronomeBPM(newBPM: Double, shouldStartAfterChange: Boolean){
-        val changeMetronomeBPMIntent = Intent(activity, MetronomeService::class.java)
-        changeMetronomeBPMIntent.putExtra(MetronomeService.NEW_BPM, newBPM)
-        changeMetronomeBPMIntent.putExtra(MetronomeService.SHOULD_START_AFTER_BPM_CHANGE, shouldStartAfterChange)
-        activity.startService(changeMetronomeBPMIntent)
     }
 }

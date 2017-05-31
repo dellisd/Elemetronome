@@ -7,13 +7,21 @@
     android:layout_height="match_parent"
     android:id="@+id/background">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <ImageView
+        android:src="@drawable/metronome_ticker_display"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:id="@+id/backgroundImage"
         android:background="@color/colorAccent"
         android:alpha="0.0"
-    />
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/bpmText"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp" />
 
     <TextView
         android:id="@+id/bpmText"

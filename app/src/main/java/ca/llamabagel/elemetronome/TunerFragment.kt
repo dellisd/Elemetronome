@@ -65,7 +65,7 @@ class TunerFragment() : Fragment() {
                 noteOctave?.text = note.first().octave.toString()
             }
 
-            handler.postDelayed(this, 100)
+            handler.postDelayed(this, 75)
         }
     }
 

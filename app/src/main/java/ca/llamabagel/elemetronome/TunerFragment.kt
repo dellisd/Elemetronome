@@ -129,7 +129,9 @@ class TunerFragment() : Fragment() {
                 minBufferSize
         )
 
-        audioRecord?.startRecording()
+        if (audioRecord?.state == AudioRecord.STATE_INITIALIZED) {
+            audioRecord?.startRecording()
+        }
     }
 
     private fun startListening() {

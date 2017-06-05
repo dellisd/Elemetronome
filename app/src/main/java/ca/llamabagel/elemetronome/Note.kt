@@ -74,7 +74,7 @@ class Note(val value: Int, val letter: String, val simple: Boolean, val type: Ty
                 }
             }
 
-            val notes = Note.notes.filter { it.value == noteValue }
+            val notes = Note.notes.filter { it.value == noteValue && it.simple }
 
             // Sets each note's octave
             notes.forEach { it.octave = octave }

@@ -60,8 +60,8 @@ class TunerFragment() : Fragment() {
             }
 
             activity.runOnUiThread {
-                noteName?.text = Note.note(maxIndex * 44100.0 / bufferD.size).note.first().letter
-                amplitude?.text = Note.note(maxIndex * 44100.0 / (bufferD.size / 2)).toString()
+                noteName?.text = Note.note(maxIndex * 44100.0 / (bufferD.size / 2)).note.first().letter
+                frequency?.text = (maxIndex * 44100.0 / (bufferD.size / 2)).toString()
             }
 
             handler.postDelayed(this, 100)
@@ -81,8 +81,6 @@ class TunerFragment() : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        startListening()
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -106,12 +104,6 @@ class TunerFragment() : Fragment() {
     }
 
     private fun getLiveAudioFeed() {
-        val minBufferSize = AudioRecord.getMinBufferSize(
-                8000,
-                AudioFormat.CHANNEL_IN_MONO,
-                AudioFormat.ENCODING_PCM_16BIT
-        )
-
         audioRecord = AudioRecord(
                 MediaRecorder.AudioSource.MIC,
                 44100,
@@ -134,18 +126,5 @@ class TunerFragment() : Fragment() {
             getLiveAudioFeed()
             if (runnable.state == Thread.State.NEW) runnable.start()
         }
-    }
-
-    private fun getAmplitude(): Double {
-        val buffer = ShortArray(minBufferSize)
-        audioRecord?.read(buffer, 0, minBufferSize)
-
-        var max = 0
-        buffer
-                .asSequence()
-                .filter { Math.abs(it.toInt()) > max }
-                .forEach { max = Math.abs(it.toInt()) }
-
-        return max.toDouble()
     }
 }

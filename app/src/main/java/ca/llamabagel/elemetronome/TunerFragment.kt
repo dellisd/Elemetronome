@@ -37,9 +37,9 @@ class TunerFragment() : Fragment() {
             android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO)
             val buffer = ShortArray(minBufferSize)
             audioRecord?.read(buffer, 0, minBufferSize)
-
             val fft = DoubleFFT_1D(minBufferSize.toLong())
-            val bufferD = DoubleArray(buffer.size) { buffer[it].toDouble() }
+            var bufferD = DoubleArray(buffer.size) { buffer[it].toDouble() }
+            bufferD = lowPassFrequency(bufferD)
             fft.realForward(bufferD)
 
             // Find the index of the maximum magnitude
@@ -65,6 +65,18 @@ class TunerFragment() : Fragment() {
 
             handler.postDelayed(this, 100)
         }
+    }
+
+    private fun lowPassFrequency(input: DoubleArray): DoubleArray {
+        val RC = 1.0/(Note.C.frequency(7)*2*Math.PI)
+        val dt = 1.0/44100.0
+        val alpha = dt/(RC+dt)
+        var output: DoubleArray = DoubleArray(input.size) {0.0}
+        output[0] = input[0]
+        for(i in 1 until output.size) {
+            output[i] = output[i-1] + (alpha*(input[i] - output[i-1]))
+        }
+        return output
     }
 
     companion object {

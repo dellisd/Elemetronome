@@ -68,14 +68,16 @@ class TunerFragment() : Fragment() {
     }
 
     private fun lowPassFrequency(input: DoubleArray): DoubleArray {
-        val RC = 1.0/(Note.C.frequency(7)*2*Math.PI)
-        val dt = 1.0/44100.0
-        val alpha = dt/(RC+dt)
-        var output: DoubleArray = DoubleArray(input.size) {0.0}
+        val RC = 1.0 / (Note.C.frequency(7) * 2 *Math.PI)
+        val dt = 1.0 / SAMPLE_RATE.toDouble()
+        val alpha = dt / (RC + dt)
+        val output: DoubleArray = DoubleArray(input.size) {0.0}
         output[0] = input[0]
+
         for(i in 1 until output.size) {
-            output[i] = output[i-1] + (alpha*(input[i] - output[i-1]))
+            output[i] = output[i - 1] + (alpha*(input[i] - output[i - 1]))
         }
+
         return output
     }
 

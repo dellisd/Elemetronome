@@ -23,12 +23,11 @@ class TunerFragment() : Fragment() {
     private var audioRecord: AudioRecord? = null
 
     private val handler = Handler()
-
     /**
      * Buffer size
      */
     private val minBufferSize = AudioRecord.getMinBufferSize(
-            8000,
+            SAMPLE_RATE,
             AudioFormat.CHANNEL_IN_MONO,
             AudioFormat.ENCODING_PCM_16BIT
     )
@@ -60,8 +59,8 @@ class TunerFragment() : Fragment() {
             }
 
             activity.runOnUiThread {
-                noteName?.text = Note.note(maxIndex * 44100.0 / (bufferD.size / 2)).note.first().letter
-                frequency?.text = (maxIndex * 44100.0 / (bufferD.size / 2)).toString()
+                noteName?.text = Note.note(maxIndex * SAMPLE_RATE.toDouble() / (bufferD.size / 2)).note.first().letter
+                frequency?.text = (maxIndex * SAMPLE_RATE.toDouble() / (bufferD.size / 2)).toString()
             }
 
             handler.postDelayed(this, 100)
@@ -77,6 +76,8 @@ class TunerFragment() : Fragment() {
 
             return m
         }
+
+        const val SAMPLE_RATE = 44100
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -106,7 +107,7 @@ class TunerFragment() : Fragment() {
     private fun getLiveAudioFeed() {
         audioRecord = AudioRecord(
                 MediaRecorder.AudioSource.MIC,
-                44100,
+                SAMPLE_RATE,
                 AudioFormat.CHANNEL_IN_MONO,
                 AudioFormat.ENCODING_PCM_16BIT,
                 minBufferSize

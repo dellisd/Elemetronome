@@ -6,4 +6,5 @@
     <string name="metronome_tempo">%d BPM</string>
     <string name="metronome_stop">Stop</string>
     <string name="metronome_start">Start</string>
+    <string name="tuner_frequency">%.2f Hz</string>
 </resources>

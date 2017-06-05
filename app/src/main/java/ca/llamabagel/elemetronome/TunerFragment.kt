@@ -59,8 +59,10 @@ class TunerFragment() : Fragment() {
             }
 
             activity.runOnUiThread {
-                noteName?.text = Note.note(maxIndex * SAMPLE_RATE.toDouble() / (bufferD.size)).note.first().letter
-                frequency?.text = (maxIndex * SAMPLE_RATE.toDouble() / (bufferD.size)).toString()
+                val note = Note.note(maxIndex * SAMPLE_RATE.toDouble() / (bufferD.size)).note
+                noteName?.text = note.first().letter
+                frequency?.text = context.getString(R.string.tuner_frequency, maxIndex * SAMPLE_RATE.toDouble() / (bufferD.size))
+                noteOctave?.text = note.first().octave.toString()
             }
 
             handler.postDelayed(this, 100)

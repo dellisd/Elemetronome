@@ -103,13 +103,19 @@ class TunerFragment() : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        audioRecord?.stop()
-        audioRecord?.release()
+
+        if (audioRecord?.state == AudioRecord.STATE_INITIALIZED) {
+            audioRecord?.stop()
+            audioRecord?.release()
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        audioRecord?.stop()
+
+        if (audioRecord?.state == AudioRecord.STATE_INITIALIZED) {
+            audioRecord?.stop()
+        }
     }
 
     override fun onResume() {

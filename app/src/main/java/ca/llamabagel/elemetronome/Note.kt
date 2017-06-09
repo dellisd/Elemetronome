@@ -95,30 +95,9 @@ class Note(val value: Int, val letter: String, val simple: Boolean, val type: Ty
      * @param octave The octave at which to use this note at.
      */
     fun frequency(octave: Int): Double {
-        var semitones = 0
-        var noteValue = value
-        var noteOctave = octave
-
-        // Calculate the number of semitones between the current note and A4 with the given octave
-        if (noteOctave > 4) {
-            while (noteOctave >= 4 && noteValue != A.value) {
-                semitones++
-
-                if (--noteValue < 0) {
-                    noteOctave--
-                    noteValue = 11
-                }
-            }
-        } else {
-            while (noteOctave <= 4 && noteValue != A.value) {
-                semitones--
-
-                if (++noteValue > 11) {
-                    noteOctave++
-                    noteValue = 0
-                }
-            }
-        }
+        val noteValue = value
+        val noteOctave = octave
+        val semitones = (octave-noteOctave)*12 + (value-noteValue)
 
         return A4 * Math.pow(a, semitones.toDouble())
     }
@@ -130,37 +109,8 @@ class Note(val value: Int, val letter: String, val simple: Boolean, val type: Ty
      *
      * Taken from http://www.phy.mtu.edu/~suits/NoteFreqCalcs.html
      */
-    fun frequency(): Double {
-        var semitones = 0
-        var noteValue = value
-        var noteOctave = octave
+    fun frequency(): Double = frequency(octave)
 
-        // Calculate the number of semitones between the current note and A4 with the given octave
-        if (noteOctave == 4) {
-            semitones = noteValue-A.value
-        }
-        else if (noteOctave > 4 ) {
-            while (noteOctave > 4 || noteValue != A.value) {
-                semitones++
-
-                if (--noteValue < 0) {
-                    noteOctave--
-                    noteValue = 11
-                }
-            }
-        } else {
-            while (noteOctave < 4 || noteValue != A.value) {
-                semitones--
-
-                if (++noteValue > 11) {
-                    noteOctave++
-                    noteValue = 0
-                }
-            }
-        }
-
-        return A4 * Math.pow(a, semitones.toDouble())
-    }
 
     /**
      * Class holding some information about the different types of notes, like naturals, sharps, flats

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
+    android:id="@+id/tunerActivity"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -14,41 +15,74 @@
         android:layout_marginRight="8dp"
         android:text="Hello World"
         android:textStyle="bold"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         tools:text="442.8 Hz"
-        android:layout_marginTop="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/noteName" />
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintBottom_toTopOf="@+id/centsBar"
+        app:layout_constraintTop_toBottomOf="@+id/noteName"
+        android:layout_marginTop="4dp" />
 
     <TextView
         android:id="@+id/noteName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_width="123dp"
+        android:layout_height="106dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="8dp"
         android:textColor="@color/colorPrimary"
         android:textSize="96sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/frequency"
+        app:layout_constraintHorizontal_bias="0.636"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="C#"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="B" />
 
     <TextView
         android:id="@+id/noteOctave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
         android:textColor="@color/colorPrimary"
         android:textSize="36sp"
         android:textStyle="bold"
-        app:layout_constraintLeft_toRightOf="@+id/noteName"
         app:layout_constraintTop_toTopOf="@+id/noteName"
-        tools:text="4" />
+        tools:text="4"
+        app:layout_constraintRight_toLeftOf="@+id/noteName"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp" />
+
+    <View
+        android:id="@+id/centsIndicator"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/centsBar"
+        app:layout_constraintTop_toTopOf="@+id/centsBar"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
+
+    <View
+        android:id="@+id/centsBar"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:background="?attr/colorControlHighlight"
+        android:visibility="visible"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/frequency" />
+
 
 </android.support.constraint.ConstraintLayout>

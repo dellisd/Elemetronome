@@ -79,7 +79,9 @@ class Note(val value: Int, val letter: String, val simple: Boolean, val type: Ty
             // Sets each note's octave
             notes.forEach { it.octave = octave }
 
-            return PitchData(notes, frequency - notes.last().frequency(octave))
+            //val tunefulnessHz = frequency - notes.last().frequency()
+            val tunefulnessCents = 1200 * Math.log(frequency/notes.last().frequency())/Math.log(2.0)
+            return PitchData(notes, tunefulnessCents)
         }
     }
 
@@ -98,8 +100,8 @@ class Note(val value: Int, val letter: String, val simple: Boolean, val type: Ty
         var noteOctave = octave
 
         // Calculate the number of semitones between the current note and A4 with the given octave
-        if (octave > 4) {
-            while (octave >= 4 && noteValue != A.value) {
+        if (noteOctave > 4) {
+            while (noteOctave >= 4 && noteValue != A.value) {
                 semitones++
 
                 if (--noteValue < 0) {
@@ -108,7 +110,7 @@ class Note(val value: Int, val letter: String, val simple: Boolean, val type: Ty
                 }
             }
         } else {
-            while (octave <= 4 && noteValue != A.value) {
+            while (noteOctave <= 4 && noteValue != A.value) {
                 semitones--
 
                 if (++noteValue > 11) {
@@ -134,8 +136,11 @@ class Note(val value: Int, val letter: String, val simple: Boolean, val type: Ty
         var noteOctave = octave
 
         // Calculate the number of semitones between the current note and A4 with the given octave
-        if (octave > 4) {
-            while (octave >= 4 && noteValue != A.value) {
+        if (noteOctave == 4) {
+            semitones = noteValue-A.value
+        }
+        else if (noteOctave > 4 ) {
+            while (noteOctave > 4 || noteValue != A.value) {
                 semitones++
 
                 if (--noteValue < 0) {
@@ -144,7 +149,7 @@ class Note(val value: Int, val letter: String, val simple: Boolean, val type: Ty
                 }
             }
         } else {
-            while (octave <= 4 && noteValue != A.value) {
+            while (noteOctave < 4 || noteValue != A.value) {
                 semitones--
 
                 if (++noteValue > 11) {
@@ -172,7 +177,7 @@ class Note(val value: Int, val letter: String, val simple: Boolean, val type: Ty
     /**
      * Data class for encapsulating pitch data.
      * @param note List of notes belonging to the pitch. Each pitch has different note names, etc.
-     * @param tunefulness How far off the pitch is from the correct in-tune note. In Hz.
+     * @param tunefulness How far off the pitch is from the correct in-tune note. In cents.
      */
     data class PitchData(val note: List<Note>, val tunefulness: Double)
 }

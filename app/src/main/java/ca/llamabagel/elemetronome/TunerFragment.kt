@@ -26,11 +26,7 @@ class TunerFragment() : Fragment() {
     /**
      * Buffer size
      */
-    private val minBufferSize = AudioRecord.getMinBufferSize(
-            SAMPLE_RATE,
-            AudioFormat.CHANNEL_IN_MONO,
-            AudioFormat.ENCODING_PCM_16BIT
-    )
+    private val minBufferSize = 8192
 
     val runnable: Thread = object: Thread() {
         override fun run() {
@@ -44,8 +40,8 @@ class TunerFragment() : Fragment() {
 
             // Find the index of the maximum magnitude
             var max = Double.NEGATIVE_INFINITY
-            var maxIndex = -1
-            for (i in 0 until bufferD.size / 2) {
+            var maxIndex = 0
+            for (i in 1 until bufferD.size / 2) {
                 // The real component
                 val re = bufferD[2*i]
                 // The imaginary component
@@ -59,13 +55,14 @@ class TunerFragment() : Fragment() {
             }
 
             activity.runOnUiThread {
-                val note = Note.note(maxIndex * SAMPLE_RATE.toDouble() / (bufferD.size)).note
-                noteName?.text = note.first().letter
+                val pitchData = Note.note(maxIndex * SAMPLE_RATE.toDouble() / (bufferD.size))
+                noteName?.text = pitchData.note.first().letter
                 frequency?.text = context.getString(R.string.tuner_frequency, maxIndex * SAMPLE_RATE.toDouble() / (bufferD.size))
-                noteOctave?.text = note.first().octave.toString()
+                centsIndicator?.x = ((tunerActivity?.width?.toFloat()?.div(2f) as Float) + pitchData.tunefulness*(tunerActivity?.width?.toFloat()?.div(100f) as Float) - 10f).toFloat()
+                noteOctave?.text = pitchData.note.first().octave.toString()
             }
 
-            handler.postDelayed(this, 100)
+            handler.postDelayed(this, 200)
         }
     }
 
@@ -93,7 +90,7 @@ class TunerFragment() : Fragment() {
             return m
         }
 
-        const val SAMPLE_RATE = 44100
+        const val SAMPLE_RATE = 16000
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

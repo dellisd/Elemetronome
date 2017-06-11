@@ -39,7 +39,7 @@ class MetronomeFragment : Fragment() {
 
     private var metronomeIsSilenced = true
 
-    // The defaul interval in ms (this is 120BPM)
+    // The default interval in ms (this is 120BPM)
     var interval: Long = 500
 
     // The BPM that the metronome should be at

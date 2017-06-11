@@ -102,7 +102,7 @@ class MetronomeFragment : Fragment() {
         tempoSeekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 // Update interval
-                interval = ((60.0f / (progress + 1).toFloat()) * 1000).toLong()
+                interval = ((60f / (progress + 1).toFloat()) * 1000f).toLong()
 
                 // Update animation duration
                 animationDurationInMillis = interval - 100
@@ -126,8 +126,8 @@ class MetronomeFragment : Fragment() {
         })
 
         // Set the initial text being displayed on the screen
-        bpmText.text = getString(R.string.metronome_tempo, (60 / (interval / 1000.0f)).toInt())
-        tempoName.text = TempoMarking.fromBpm((60 / (interval / 1000.0f)).toInt()).name
+        bpmText.text = getString(R.string.metronome_tempo, (60f / (interval.toFloat() / 1000f)).toInt())
+        tempoName.text = TempoMarking.fromBpm((60f / (interval.toFloat() / 1000f)).toInt()).name
 
         metronomeButton.setOnClickListener { _ ->
             idk_youCanMakeAThICCC_t1ckIfUWant = !idk_youCanMakeAThICCC_t1ckIfUWant

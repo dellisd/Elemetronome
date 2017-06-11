@@ -1,8 +1,5 @@
 package ca.llamabagel.elemetronome
 
-import android.app.ActivityManager
-import android.app.Service
-import android.content.Intent
 import android.media.AudioManager
 import android.media.ToneGenerator
 import android.os.Bundle
@@ -42,7 +39,7 @@ class MetronomeFragment : Fragment() {
 
     private var metronomeIsSilenced = true
 
-    // The defaul interval in ms (this is 120BPM)
+    // The default interval in ms (this is 120BPM)
     var interval: Long = 500
 
     // The BPM that the metronome should be at
@@ -56,7 +53,7 @@ class MetronomeFragment : Fragment() {
         animationDurationInMillis = interval - 100
 
         // Create the animation that makes the screen pulsate
-        val fadeOut = AnimationUtils.loadAnimation(activity, R.anim.fade_out)
+        val fadeOut = AnimationUtils.loadAnimation(activity!!, R.anim.fade_out)
 
         // Initialize the metronomeTimer
         metronomeTimer = object: AccurateTimer(SystemClock.uptimeMillis(), interval) {
@@ -78,36 +75,42 @@ class MetronomeFragment : Fragment() {
         // Start the timer in the background
         metronomeTimer?.start()
 
+        fun startNewMetronome() {
+            metronomeTimer?.cancel()
+
+            metronomeTimer = object: AccurateTimer(SystemClock.uptimeMillis(), interval) {
+                override fun onTick() {
+                    if (!metronomeIsSilenced) {
+                        toneGenerator.startTone(ToneGenerator.TONE_DTMF_0, toneDurationInMillis)
+
+                        // Make sure that the duration is set to something reasonable from the start
+                        fadeOut.duration = animationDurationInMillis
+
+                        // Make the screen pulsate
+                        backgroundImage.startAnimation(fadeOut)
+                    }
+                }
+
+                override fun onFinish() {}
+            }
+
+            // Restart the timer
+
+            metronomeTimer?.start()
+        }
+
         tempoSeekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 // Update interval
-                interval = ((60.0f / (progress + 1)) * 1000).toLong()
+                interval = ((60f / (progress + 1).toFloat()) * 1000f).toLong()
 
                 // Update animation duration
                 animationDurationInMillis = interval - 100
 
                 // If the metronome is currently going
-                if (idk_youCanMakeAThICCC_t1ckIfUWant)
-                    metronomeTimer?.cancel()
-
-                metronomeTimer = object: AccurateTimer(SystemClock.uptimeMillis(), interval) {
-                    override fun onTick() {
-                        if (!metronomeIsSilenced) {
-                            toneGenerator.startTone(ToneGenerator.TONE_DTMF_0, toneDurationInMillis)
-
-                            // Make sure that the duration is set to something reasonable from the start
-                            fadeOut.duration = animationDurationInMillis
-
-                            // Make the screen pulsate
-                            backgroundImage.startAnimation(fadeOut)
-                        }
-                    }
-
-                    override fun onFinish() {}
+                if (idk_youCanMakeAThICCC_t1ckIfUWant) {
+                    startNewMetronome()
                 }
-
-                // Restart the timer
-                metronomeTimer?.start()
 
                 // Update BPM
                 BPM = progress + 1
@@ -123,8 +126,8 @@ class MetronomeFragment : Fragment() {
         })
 
         // Set the initial text being displayed on the screen
-        bpmText.text = getString(R.string.metronome_tempo, (60 / (interval / 1000.0f)).toInt())
-        tempoName.text = TempoMarking.fromBpm((60 / (interval / 1000.0f)).toInt()).name
+        bpmText.text = getString(R.string.metronome_tempo, (60f / (interval.toFloat() / 1000f)).toInt())
+        tempoName.text = TempoMarking.fromBpm((60f / (interval.toFloat() / 1000f)).toInt()).name
 
         metronomeButton.setOnClickListener { _ ->
             idk_youCanMakeAThICCC_t1ckIfUWant = !idk_youCanMakeAThICCC_t1ckIfUWant
@@ -143,7 +146,16 @@ class MetronomeFragment : Fragment() {
                 metronomeIsSilenced = false
 
                 metronomeButton.text = getString(R.string.metronome_stop)
+
+                startNewMetronome()
             }
+        }
+
+        incrementButton.setOnClickListener { _ ->
+            tempoSeekBar.progress++
+        }
+        decrementButton.setOnClickListener { _ ->
+            tempoSeekBar.progress--
         }
     }
 }

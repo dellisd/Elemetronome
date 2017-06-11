@@ -18,7 +18,7 @@ class TempoMarking(val min: Int, val max: Int, val name: String) {
                 TempoMarking(116, 140, "Allegro"),
                 TempoMarking(141, 150, "Vivace"),
                 TempoMarking(151, 170, "Presto"),
-                TempoMarking(171, Int.MAX_VALUE, "Prestissimmo")
+                TempoMarking(171, Int.MAX_VALUE, "Prestissimo")
         )
 
         fun fromBpm(bpm: Int) : TempoMarking = tempos.filter { it.bpmIsInRange(bpm) }.last()

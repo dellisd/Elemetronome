@@ -75,6 +75,30 @@ class MetronomeFragment : Fragment() {
         // Start the timer in the background
         metronomeTimer?.start()
 
+        fun startNewMetronome() {
+            metronomeTimer?.cancel()
+
+            metronomeTimer = object: AccurateTimer(SystemClock.uptimeMillis(), interval) {
+                override fun onTick() {
+                    if (!metronomeIsSilenced) {
+                        toneGenerator.startTone(ToneGenerator.TONE_DTMF_0, toneDurationInMillis)
+
+                        // Make sure that the duration is set to something reasonable from the start
+                        fadeOut.duration = animationDurationInMillis
+
+                        // Make the screen pulsate
+                        backgroundImage.startAnimation(fadeOut)
+                    }
+                }
+
+                override fun onFinish() {}
+            }
+
+            // Restart the timer
+
+            metronomeTimer?.start()
+        }
+
         tempoSeekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 // Update interval
@@ -85,27 +109,7 @@ class MetronomeFragment : Fragment() {
 
                 // If the metronome is currently going
                 if (idk_youCanMakeAThICCC_t1ckIfUWant) {
-                    metronomeTimer?.cancel()
-
-                    metronomeTimer = object: AccurateTimer(SystemClock.uptimeMillis(), interval) {
-                        override fun onTick() {
-                            if (!metronomeIsSilenced) {
-                                toneGenerator.startTone(ToneGenerator.TONE_DTMF_0, toneDurationInMillis)
-
-                                // Make sure that the duration is set to something reasonable from the start
-                                fadeOut.duration = animationDurationInMillis
-
-                                // Make the screen pulsate
-                                backgroundImage.startAnimation(fadeOut)
-                            }
-                        }
-
-                        override fun onFinish() {}
-                    }
-
-                    // Restart the timer
-
-                    metronomeTimer?.start()
+                    startNewMetronome()
                 }
 
                 // Update BPM
@@ -142,8 +146,11 @@ class MetronomeFragment : Fragment() {
                 metronomeIsSilenced = false
 
                 metronomeButton.text = getString(R.string.metronome_stop)
+
+                startNewMetronome()
             }
         }
+
         incrementButton.setOnClickListener { _ ->
             tempoSeekBar.progress++
         }

@@ -84,27 +84,29 @@ class MetronomeFragment : Fragment() {
                 animationDurationInMillis = interval - 100
 
                 // If the metronome is currently going
-                if (idk_youCanMakeAThICCC_t1ckIfUWant)
+                if (idk_youCanMakeAThICCC_t1ckIfUWant) {
                     metronomeTimer?.cancel()
 
-                metronomeTimer = object: AccurateTimer(SystemClock.uptimeMillis(), interval) {
-                    override fun onTick() {
-                        if (!metronomeIsSilenced) {
-                            toneGenerator.startTone(ToneGenerator.TONE_DTMF_0, toneDurationInMillis)
+                    metronomeTimer = object: AccurateTimer(SystemClock.uptimeMillis(), interval) {
+                        override fun onTick() {
+                            if (!metronomeIsSilenced) {
+                                toneGenerator.startTone(ToneGenerator.TONE_DTMF_0, toneDurationInMillis)
 
-                            // Make sure that the duration is set to something reasonable from the start
-                            fadeOut.duration = animationDurationInMillis
+                                // Make sure that the duration is set to something reasonable from the start
+                                fadeOut.duration = animationDurationInMillis
 
-                            // Make the screen pulsate
-                            backgroundImage.startAnimation(fadeOut)
+                                // Make the screen pulsate
+                                backgroundImage.startAnimation(fadeOut)
+                            }
                         }
+
+                        override fun onFinish() {}
                     }
 
-                    override fun onFinish() {}
-                }
+                    // Restart the timer
 
-                // Restart the timer
-                metronomeTimer?.start()
+                    metronomeTimer?.start()
+                }
 
                 // Update BPM
                 BPM = progress + 1

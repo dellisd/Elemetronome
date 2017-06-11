@@ -1,8 +1,5 @@
 package ca.llamabagel.elemetronome
 
-import android.app.ActivityManager
-import android.app.Service
-import android.content.Intent
 import android.media.AudioManager
 import android.media.ToneGenerator
 import android.os.Bundle
@@ -56,7 +53,7 @@ class MetronomeFragment : Fragment() {
         animationDurationInMillis = interval - 100
 
         // Create the animation that makes the screen pulsate
-        val fadeOut = AnimationUtils.loadAnimation(activity, R.anim.fade_out)
+        val fadeOut = AnimationUtils.loadAnimation(activity!!, R.anim.fade_out)
 
         // Initialize the metronomeTimer
         metronomeTimer = object: AccurateTimer(SystemClock.uptimeMillis(), interval) {
@@ -144,6 +141,12 @@ class MetronomeFragment : Fragment() {
 
                 metronomeButton.text = getString(R.string.metronome_stop)
             }
+        }
+        incrementButton.setOnClickListener { _ ->
+            tempoSeekBar.progress++
+        }
+        decrementButton.setOnClickListener { _ ->
+            tempoSeekBar.progress--
         }
     }
 }

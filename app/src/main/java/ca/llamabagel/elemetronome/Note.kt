@@ -54,24 +54,13 @@ class Note(val value: Int, val letter: String, val simple: Boolean, val type: Ty
          * @param frequency The frequency to obtain PitchData for
          */
         fun note(frequency: Double): PitchData {
-            var octave = 4
-            var noteValue = A.value
-            var semitones: Int = Math.round(Math.log(frequency / A4) / Math.log(a)).toInt()
-
-            if (semitones > 0) {
-                while (semitones-- > 0) {
-                    if (++noteValue > 11) {
-                        octave++
-                        noteValue = 0
-                    }
-                }
-            } else {
-                while (semitones++ < 0) {
-                    if (--noteValue < 0) {
-                        octave--
-                        noteValue = 11
-                    }
-                }
+            val semitones: Int = Math.round(Math.log(frequency / A4) / Math.log(a)).toInt()
+            // Need to add 12 and then take mod again in case result after first mod is negative
+            val noteValue : Int = (((A.value + semitones) % 12) + 12) % 12
+            var octave: Int = 4+Math.floor(semitones.toDouble()/12.0).toInt()
+            // Necessary because the calculation above will only increment octave for each time noteValue reaches the next A
+            if (noteValue < A.value) {
+                octave++
             }
 
             val notes = Note.notes.filter { it.value == noteValue && it.simple }
@@ -80,7 +69,7 @@ class Note(val value: Int, val letter: String, val simple: Boolean, val type: Ty
             notes.forEach { it.octave = octave }
 
             //val tunefulnessHz = frequency - notes.last().frequency()
-            val tunefulnessCents = 1200 * Math.log(frequency/notes.last().frequency())/Math.log(2.0)
+            val tunefulnessCents = 1200 * Math.log(frequency/notes.first().frequency())/Math.log(2.0)
             return PitchData(notes, tunefulnessCents)
         }
     }
@@ -95,9 +84,7 @@ class Note(val value: Int, val letter: String, val simple: Boolean, val type: Ty
      * @param octave The octave at which to use this note at.
      */
     fun frequency(octave: Int): Double {
-        val noteValue = value
-        val noteOctave = octave
-        val semitones = (octave-noteOctave)*12 + (value-noteValue)
+        val semitones = (octave-4)*12 + (value-A.value)
 
         return A4 * Math.pow(a, semitones.toDouble())
     }

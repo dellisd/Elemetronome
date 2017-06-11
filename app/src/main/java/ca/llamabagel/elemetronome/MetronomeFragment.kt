@@ -78,7 +78,7 @@ class MetronomeFragment : Fragment() {
         tempoSeekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 // Update interval
-                interval = ((60.0f / (progress + 1)) * 1000).toLong()
+                interval = ((60.0f / (progress + 1).toFloat()) * 1000).toLong()
 
                 // Update animation duration
                 animationDurationInMillis = interval - 100

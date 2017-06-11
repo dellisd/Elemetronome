@@ -62,7 +62,7 @@ class TunerFragment() : Fragment() {
                 noteOctave?.text = pitchData.note.first().octave.toString()
             }
 
-            handler.postDelayed(this, 200)
+            handler.postDelayed(this, 100)
         }
     }
 

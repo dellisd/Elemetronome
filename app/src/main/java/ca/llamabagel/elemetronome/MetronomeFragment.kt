@@ -7,11 +7,13 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.SeekBar
 import kotlinx.android.synthetic.main.fragment_metronome.*
+import java.util.*
 
 /**
  * Created by derek on 5/24/2017.
@@ -42,6 +44,8 @@ class MetronomeFragment : Fragment() {
 
     private var currentBeat = 1
     private var totalBeats = 4
+
+    private var beatTimer = Timer()
 
     // The default interval in ms (this is 120BPM)
     var interval: Long = 500
@@ -140,6 +144,38 @@ class MetronomeFragment : Fragment() {
         }
         decrementButton.setOnClickListener { _ ->
             tempoSeekBar.progress--
+        }
+
+        // Increments the tempo when the increment button is held down
+        incrementButton.setOnTouchListener { _, motionEvent ->
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                beatTimer = Timer()
+                beatTimer.scheduleAtFixedRate(object : TimerTask() {
+                    override fun run() {
+                        tempoSeekBar.progress++
+                    }
+                }, 500, 50)
+            } else if (motionEvent.action == MotionEvent.ACTION_UP) {
+                beatTimer.cancel()
+            }
+
+            false
+        }
+
+        // Decrements the tempo when the decrement button is held down
+        decrementButton.setOnTouchListener { _, motionEvent ->
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                beatTimer = Timer()
+                beatTimer.scheduleAtFixedRate(object : TimerTask() {
+                    override fun run() {
+                        tempoSeekBar.progress--
+                    }
+                }, 500, 50)
+            } else if (motionEvent.action == MotionEvent.ACTION_UP) {
+                beatTimer.cancel()
+            }
+
+            false
         }
     }
 }

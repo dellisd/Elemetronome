@@ -10,4 +10,9 @@
     <string name="metronome_increment">+</string>
     <string name="metronome_decrement">-</string>
     <string name="metronome_tick_display_desc">Displays a pulsating colour on tick</string>
+    <string name="beat_display_view_desc">Displays the number of beats to user</string>
+    <string name="beat_display_curr_num_beats">4</string>
+    <string name="beat_decrement_button_text">-</string>
+    <string name="beat_increment_button_text">+</string>
+    <string name="beats_display_view_annotation">beats</string>
 </resources>

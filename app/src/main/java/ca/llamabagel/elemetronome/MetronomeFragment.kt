@@ -8,8 +8,6 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
-import android.widget.ImageView
 import android.widget.SeekBar
 import kotlinx.android.synthetic.main.fragment_metronome.*
 
@@ -40,11 +38,6 @@ class MetronomeFragment : Fragment() {
 
     private var metronomeIsSilenced = true
 
-    private var currentBeat = 1
-    private var totalBeats = 4
-
-    private var tickViews: ArrayList<ImageView> = ArrayList()
-
     // The default interval in ms (this is 120BPM)
     var interval: Long = 500
 
@@ -58,8 +51,7 @@ class MetronomeFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         animationDurationInMillis = interval - 100
 
-        // Create the animation that makes the screen pulsate
-        val fadeOut = AnimationUtils.loadAnimation(activity!!, R.anim.fade_out)
+        val beatsView: BeatsView = BeatsView(context)
 
         // Initialize the metronomeTimer
         metronomeTimer = object: AccurateTimer(SystemClock.uptimeMillis(), interval) {
@@ -67,11 +59,7 @@ class MetronomeFragment : Fragment() {
                 if (!metronomeIsSilenced) {
                     toneGenerator.startTone(ToneGenerator.TONE_DTMF_0, toneDurationInMillis)
 
-                    // Make sure that the duration is set to something reasonable from the start
-                    fadeOut.duration = animationDurationInMillis
-
-                    // Make the screen pulsate
-                    backgroundImage.startAnimation(fadeOut)
+                    beatsView.onTick(animationDurationInMillis)
                 }
             }
 
@@ -89,15 +77,7 @@ class MetronomeFragment : Fragment() {
                     if (!metronomeIsSilenced) {
                         toneGenerator.startTone(ToneGenerator.TONE_DTMF_0, toneDurationInMillis)
 
-                        // Update the number of beats
-                        currentBeat++
-                        if (currentBeat > totalBeats) currentBeat = 1
-
-                        // Make sure that the duration is set to something reasonable from the start
-                        fadeOut.duration = animationDurationInMillis
-
-                        // Make the screen pulsate
-                        backgroundImage.startAnimation(fadeOut)
+                        beatsView.onTick(animationDurationInMillis)
                     }
                 }
 
@@ -111,6 +91,7 @@ class MetronomeFragment : Fragment() {
 
         tempoSeekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+
                 // Update interval
                 interval = ((60f / (progress + 1).toFloat()) * 1000f).toLong()
 
@@ -132,7 +113,9 @@ class MetronomeFragment : Fragment() {
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
 
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                beatsView.resetBeat()
+            }
         })
 
         // Set the initial text being displayed on the screen
@@ -142,16 +125,12 @@ class MetronomeFragment : Fragment() {
         metronomeButton.setOnClickListener { _ ->
             idk_youCanMakeAThICCC_t1ckIfUWant = !idk_youCanMakeAThICCC_t1ckIfUWant
             if (!idk_youCanMakeAThICCC_t1ckIfUWant) {
-                backgroundImage.setAlpha(0.0f)
-
                 // Make sure that the animation and the tone can't be heard
                 metronomeIsSilenced = true
 
                 metronomeButton.text = getString(R.string.metronome_start)
             }
             else {
-                backgroundImage.setAlpha(0.4f)
-
                 // Make sure metronome can be heard
                 metronomeIsSilenced = false
 
@@ -167,23 +146,27 @@ class MetronomeFragment : Fragment() {
         }
 
         // Update the display of number of beats
-        numBeatsView.setText(totalBeats.toString())
+        numBeatsView.setText(beatsView.getNumBeats().toString())
 
         // Add four imageViews to display each beat
 
 
         // Set the onClick listener for the beat increment and decrement buttons
         beatIncrementButton.setOnClickListener { _ ->
-            totalBeats++
-            numBeatsView.setText(totalBeats.toString())
+            beatsView.resetBeat()
 
             // Add another imageView
+            beatsView.setNumBeats(beatsView.getNumBeats() + 1)
+
+            numBeatsView.setText(beatsView.getNumBeats().toString())
         }
         beatDecrementButton.setOnClickListener { _ ->
-            totalBeats--
-            numBeatsView.setText(totalBeats.toString())
+            beatsView.resetBeat()
 
             // Remove an imageView
+            beatsView.setNumBeats(beatsView.getNumBeats() - 1)
+
+            numBeatsView.setText(beatsView.getNumBeats().toString())
         }
 
     }

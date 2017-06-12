@@ -7,24 +7,18 @@
     android:layout_height="match_parent"
     android:id="@+id/background">
 
-    <ImageView
-        android:contentDescription="@string/metronome_tick_display_desc"
-        android:id="@+id/backgroundImage"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
+    <ca.llamabagel.elemetronome.BeatsView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:alpha="0.0"
-        android:background="@color/colorAccent"
-        android:src="@drawable/metronome_ticker_display"
-        app:layout_constraintBottom_toTopOf="@+id/bpmText"
-        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/bpmText"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp" />
 
     <TextView
         android:id="@+id/bpmText"
@@ -120,8 +114,8 @@
         android:id="@+id/numBeatsView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="Displays the number of beats to user"
-        android:text="4"
+        android:contentDescription="@string/beat_display_view_desc"
+        android:text="@string/beat_display_curr_num_beats"
         android:textSize="24sp"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/metronomeButton"
@@ -137,30 +131,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:background="@android:color/transparent"
-        android:text="Button"
+        android:text="@string/beat_decrement_button_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/numBeatsView"
         app:layout_constraintTop_toBottomOf="@+id/decrementButton"
-        tools:text="-"
-        app:layout_constraintVertical_bias="0.504" />
+        app:layout_constraintVertical_bias="0.504"
+        tools:text="-" />
 
     <Button
         android:id="@+id/beatIncrementButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginLeft="7dp"
+        android:layout_marginStart="7dp"
         android:layout_marginTop="8dp"
         android:background="@android:color/transparent"
-        android:text="Button"
+        android:text="@string/beat_increment_button_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/numBeatsView"
         app:layout_constraintTop_toBottomOf="@+id/incrementButton"
-        tools:text="+"
-        app:layout_constraintVertical_bias="0.504" />
+        app:layout_constraintVertical_bias="0.504"
+        tools:text="+" />
 
     <TextView
         android:id="@+id/numBeatsDescriptionView"
@@ -169,7 +163,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:text="beats"
+        android:text="@string/beats_display_view_annotation"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/numBeatsView" />

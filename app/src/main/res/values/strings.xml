@@ -2,7 +2,7 @@
     <string name="app_name">Elemetronome</string>
     <string name="title_metronome">Metronome</string>
     <string name="title_tuner">Tuner</string>
-    <string name="title_tempo">Tempo</string>
+    <string name="title_tone_generator">Tone Generator</string>
     <string name="metronome_tempo">%d BPM</string>
     <string name="metronome_stop">Stop</string>
     <string name="metronome_start">Start</string>
@@ -10,4 +10,30 @@
     <string name="metronome_increment">+</string>
     <string name="metronome_decrement">-</string>
     <string name="metronome_tick_display_desc">Displays a pulsating colour on tick</string>
+    <string name="note_name_text_view">Note Name</string>
+    <string name="octave_text_view">Octave</string>
+    <string-array name="note_names">
+        <item>C</item>
+        <item>C#</item>
+        <item>D</item>
+        <item>D#</item>
+        <item>E</item>
+        <item>F</item>
+        <item>F#</item>
+        <item>G</item>
+        <item>G#</item>
+        <item>A</item>
+        <item>A#</item>
+        <item>B</item>
+    </string-array>
+    <string-array name="octaves">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </string-array>
 </resources>

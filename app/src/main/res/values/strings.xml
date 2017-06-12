@@ -2,7 +2,7 @@
     <string name="app_name">Elemetronome</string>
     <string name="title_metronome">Metronome</string>
     <string name="title_tuner">Tuner</string>
-    <string name="title_tempo">Tempo</string>
+    <string name="title_tone_generator">Tone Generator</string>
     <string name="metronome_tempo">%d BPM</string>
     <string name="metronome_stop">Stop</string>
     <string name="metronome_start">Start</string>

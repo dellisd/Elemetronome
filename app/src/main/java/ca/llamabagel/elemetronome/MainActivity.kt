@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
             override fun onPageSelected(position: Int) {
-                val ids = listOf(R.id.navigation_metronome, R.id.navigation_tuner)
+                val ids = listOf(R.id.navigation_metronome, R.id.navigation_tuner, R.id.navigation_tone_generator)
                 navigation.selectedItemId = ids[position]
             }
         })
@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.navigation_metronome -> viewPager.currentItem = 0
                 R.id.navigation_tuner -> viewPager.currentItem = 1
+                R.id.navigation_tone_generator -> viewPager.currentItem = 2
             }
 
             true

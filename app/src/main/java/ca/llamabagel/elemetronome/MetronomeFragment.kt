@@ -146,8 +146,6 @@ class MetronomeFragment : Fragment() {
                 metronomeIsSilenced = false
 
                 metronomeButton.text = getString(R.string.metronome_stop)
-
-                startNewMetronome()
             }
         }
 

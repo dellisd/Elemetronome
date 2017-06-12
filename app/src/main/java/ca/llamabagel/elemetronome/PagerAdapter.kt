@@ -17,5 +17,5 @@ class PagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         }
     }
 
-    override fun getCount(): Int = 3
+    override fun getCount(): Int = 2
 }

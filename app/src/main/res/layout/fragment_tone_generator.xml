@@ -36,7 +36,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/note_name_text_view"
         android:textColor="@android:color/black"
-        app:layout_constraintBottom_toTopOf="@+id/noteSpinnner"
+        app:layout_constraintBottom_toTopOf="@+id/noteSpinner"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -56,6 +56,6 @@
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/noteSpinnner"
+        app:layout_constraintTop_toBottomOf="@+id/noteSpinner"
         app:layout_constraintVertical_bias="0.887" />
 </android.support.constraint.ConstraintLayout>

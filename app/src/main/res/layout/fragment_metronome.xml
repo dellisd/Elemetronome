@@ -8,6 +8,7 @@
     android:id="@+id/background">
 
     <ImageView
+        android:contentDescription="@string/metronome_tick_display_desc"
         android:id="@+id/backgroundImage"
         android:layout_width="32dp"
         android:layout_height="32dp"

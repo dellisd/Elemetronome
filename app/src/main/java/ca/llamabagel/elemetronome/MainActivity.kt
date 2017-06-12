@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.preference.PreferenceManager
 import android.support.v4.view.ViewPager
 
 import kotlinx.android.synthetic.main.activity_main.*
@@ -29,6 +30,9 @@ class MainActivity : AppCompatActivity() {
         // Changes the volume control stream so that the volume buttons will work properly
         volumeControlStream = AudioManager.STREAM_MUSIC
 
+        // Get the tab that was last open when the user last closed the app
+        val openTab = PreferenceManager.getDefaultSharedPreferences(this).getInt("open_tab", 0)
+
         viewPager.adapter = PagerAdapter(supportFragmentManager)
         viewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {}
@@ -40,6 +44,7 @@ class MainActivity : AppCompatActivity() {
                 navigation.selectedItemId = ids[position]
             }
         })
+        viewPager.currentItem = openTab
 
         navigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -65,5 +70,27 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (!permissionToRecordAccepted) finish()
+    }
+
+    private fun saveTabState() {
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .edit()
+                .putInt("open_tab", viewPager?.currentItem ?: 0)
+                .apply()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        saveTabState()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        saveTabState()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        saveTabState()
     }
 }

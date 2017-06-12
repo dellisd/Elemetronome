@@ -28,7 +28,6 @@ class TunerFragment() : Fragment(), AsyncTuner.OnUpdateListener {
 
     val minBufferSize = 8192
 
-
     companion object {
         fun newInstance(text: String): TunerFragment {
             val m = TunerFragment()

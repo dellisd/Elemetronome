@@ -1,5 +1,6 @@
 package ca.llamabagel.elemetronome
 
+import android.content.Context
 import android.media.AudioManager
 import android.media.ToneGenerator
 import android.os.Bundle
@@ -56,27 +57,7 @@ class MetronomeFragment : Fragment() {
         animationDurationInMillis = interval - 100
 
         // Create the animation that makes the screen pulsate
-        val fadeOut = AnimationUtils.loadAnimation(activity!!, R.anim.fade_out)
-
-        // Initialize the metronomeTimer
-        metronomeTimer = object: AccurateTimer(SystemClock.uptimeMillis(), interval) {
-            override fun onTick() {
-                if (!metronomeIsSilenced) {
-                    toneGenerator.startTone(ToneGenerator.TONE_DTMF_0, toneDurationInMillis)
-
-                    // Make sure that the duration is set to something reasonable from the start
-                    fadeOut.duration = animationDurationInMillis
-
-                    // Make the screen pulsate
-                    backgroundImage.startAnimation(fadeOut)
-                }
-            }
-
-            override fun onFinish() {}
-        }
-
-        // Start the timer in the background
-        metronomeTimer?.start()
+        val fadeOut = AnimationUtils.loadAnimation(activity as Context?, R.anim.fade_out)
 
         fun startNewMetronome() {
             metronomeTimer?.cancel()
@@ -104,17 +85,6 @@ class MetronomeFragment : Fragment() {
 
         tempoSeekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                // Update interval
-                interval = ((60f / (progress + 1).toFloat()) * 1000f).toLong()
-
-                // Update animation duration
-                animationDurationInMillis = interval - 100
-
-                // If the metronome is currently going
-                if (idk_youCanMakeAThICCC_t1ckIfUWant) {
-                    startNewMetronome()
-                }
-
                 // Update BPM
                 BPM = progress + 1
 
@@ -125,7 +95,18 @@ class MetronomeFragment : Fragment() {
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
 
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                // Update interval
+                interval = ((60f / (BPM).toFloat()) * 1000f).toLong()
+
+                // Update animation duration
+                animationDurationInMillis = interval - 100
+
+                // If the metronome is currently going
+                if (idk_youCanMakeAThICCC_t1ckIfUWant) {
+                    startNewMetronome()
+                }
+            }
         })
 
         // Set the initial text being displayed on the screen
@@ -149,6 +130,8 @@ class MetronomeFragment : Fragment() {
                 metronomeIsSilenced = false
 
                 metronomeButton.text = getString(R.string.metronome_stop)
+
+                startNewMetronome()
             }
         }
 

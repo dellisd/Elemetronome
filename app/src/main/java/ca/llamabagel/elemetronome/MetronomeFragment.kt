@@ -63,9 +63,9 @@ class MetronomeFragment : Fragment() {
             override fun onTick() {
                 if (!metronomeIsSilenced) {
                     val toneToPlay = if (beatsView.selectedList[beatsView.currentBeat - 1]){
-                        TONE_DTMF_1
-                    } else {
                         TONE_DTMF_0
+                    } else {
+                        TONE_DTMF_1
                     }
                     toneGenerator.startTone(toneToPlay, toneDurationInMillis)
 
@@ -86,9 +86,9 @@ class MetronomeFragment : Fragment() {
                 override fun onTick() {
                     if (!metronomeIsSilenced) {
                         val toneToPlay = if (beatsView.selectedList[beatsView.currentBeat - 1]){
-                            TONE_DTMF_1
-                        } else {
                             TONE_DTMF_0
+                        } else {
+                            TONE_DTMF_1
                         }
                         toneGenerator.startTone(toneToPlay, toneDurationInMillis)
 

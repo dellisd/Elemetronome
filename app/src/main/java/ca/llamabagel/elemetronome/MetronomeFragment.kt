@@ -2,6 +2,8 @@ package ca.llamabagel.elemetronome
 
 import android.media.AudioManager
 import android.media.ToneGenerator
+import android.media.ToneGenerator.TONE_DTMF_0
+import android.media.ToneGenerator.TONE_DTMF_1
 import android.os.Bundle
 import android.os.SystemClock
 import android.support.v4.app.Fragment
@@ -51,13 +53,16 @@ class MetronomeFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         animationDurationInMillis = interval - 100
 
-        val beatsView: BeatsView = BeatsView(context)
-
         // Initialize the metronomeTimer
         metronomeTimer = object: AccurateTimer(SystemClock.uptimeMillis(), interval) {
             override fun onTick() {
                 if (!metronomeIsSilenced) {
-                    toneGenerator.startTone(ToneGenerator.TONE_DTMF_0, toneDurationInMillis)
+                    val toneToPlay = if (beatsView.selectedList[beatsView.currentBeat - 1]){
+                        TONE_DTMF_1
+                    } else {
+                        TONE_DTMF_0
+                    }
+                    toneGenerator.startTone(toneToPlay, toneDurationInMillis)
 
                     beatsView.onTick(animationDurationInMillis)
                 }
@@ -75,7 +80,12 @@ class MetronomeFragment : Fragment() {
             metronomeTimer = object: AccurateTimer(SystemClock.uptimeMillis(), interval) {
                 override fun onTick() {
                     if (!metronomeIsSilenced) {
-                        toneGenerator.startTone(ToneGenerator.TONE_DTMF_0, toneDurationInMillis)
+                        val toneToPlay = if (beatsView.selectedList[beatsView.currentBeat - 1]){
+                            TONE_DTMF_1
+                        } else {
+                            TONE_DTMF_0
+                        }
+                        toneGenerator.startTone(toneToPlay, toneDurationInMillis)
 
                         beatsView.onTick(animationDurationInMillis)
                     }
@@ -146,27 +156,26 @@ class MetronomeFragment : Fragment() {
         }
 
         // Update the display of number of beats
-        numBeatsView.setText(beatsView.getNumBeats().toString())
-
-        // Add four imageViews to display each beat
-
+        numBeatsView.setText(beatsView.numBeats.toString())
 
         // Set the onClick listener for the beat increment and decrement buttons
         beatIncrementButton.setOnClickListener { _ ->
             beatsView.resetBeat()
 
             // Add another imageView
-            beatsView.setNumBeats(beatsView.getNumBeats() + 1)
+            beatsView.numBeats = beatsView.numBeats + 1
 
-            numBeatsView.setText(beatsView.getNumBeats().toString())
+            numBeatsView.setText(beatsView.numBeats.toString())
         }
         beatDecrementButton.setOnClickListener { _ ->
             beatsView.resetBeat()
 
-            // Remove an imageView
-            beatsView.setNumBeats(beatsView.getNumBeats() - 1)
+            if (beatsView.numBeats > 1) {
+                // Remove an imageView
+                beatsView.numBeats = beatsView.numBeats - 1
+            }
 
-            numBeatsView.setText(beatsView.getNumBeats().toString())
+            numBeatsView.setText(beatsView.numBeats.toString())
         }
 
     }

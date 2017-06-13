@@ -19,7 +19,9 @@
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/bpmText"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <TextView
         android:id="@+id/bpmText"
@@ -37,7 +39,7 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="8dp"
-        app:layout_constraintVertical_bias="0.32999998"
+        app:layout_constraintVertical_bias="0.273"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp" />
 
@@ -63,11 +65,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/metronome_start"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/incrementButton"
         app:layout_constraintLeft_toRightOf="@+id/decrementButton"
         app:layout_constraintRight_toLeftOf="@+id/incrementButton"
-        app:layout_constraintTop_toBottomOf="@+id/tempoSeekBar"
-        app:layout_constraintVertical_bias="0.085" />
+        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintTop_toTopOf="@+id/incrementButton"
+        android:layout_marginTop="24dp" />
 
     <SeekBar
         android:id="@+id/tempoSeekBar"
@@ -75,7 +78,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="23dp"
         android:max="239"
         android:progress="119"
         app:layout_constraintHorizontal_bias="0.0"
@@ -91,12 +94,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         app:srcCompat="@drawable/ic_remove_black_24dp"
         android:tint="@color/colorAccent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/metronomeButton"
-        app:layout_constraintTop_toBottomOf="@+id/tempoSeekBar"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintBottom_toBottomOf="@+id/metronomeButton"
+        app:layout_constraintTop_toTopOf="@+id/metronomeButton"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintHorizontal_chainStyle="spread" />
 
     <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/incrementButton"
@@ -104,58 +110,61 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         app:srcCompat="@drawable/ic_add_black_24dp"
         android:tint="@color/colorAccent"
         app:layout_constraintLeft_toRightOf="@+id/metronomeButton"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tempoSeekBar"
-        app:layout_constraintVertical_bias="1.0" />
+        android:layout_marginTop="35dp" />
 
     <TextView
         android:id="@+id/numBeatsView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:contentDescription="@string/beat_display_view_desc"
         android:text="@string/beat_display_curr_num_beats"
         android:textSize="24sp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/metronomeButton"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/metronomeButton" />
 
-    <Button
+    <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/beatDecrementButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginTop="8dp"
+        app:srcCompat="@drawable/ic_remove_black_24dp"
         android:background="@android:color/transparent"
-        android:text="@string/beat_decrement_button_text"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/numBeatsView"
         app:layout_constraintTop_toBottomOf="@+id/decrementButton"
-        app:layout_constraintVertical_bias="0.504"
-        tools:text="-" />
+        app:layout_constraintVertical_bias="0.504" />
 
-    <Button
+    <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/beatIncrementButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginStart="7dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:background="@android:color/transparent"
-        android:text="@string/beat_increment_button_text"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/numBeatsView"
         app:layout_constraintTop_toBottomOf="@+id/incrementButton"
         app:layout_constraintVertical_bias="0.504"
-        tools:text="+" />
+        app:srcCompat="@drawable/ic_add_black_24dp"/>
 
     <TextView
         android:id="@+id/numBeatsDescriptionView"
@@ -163,10 +172,12 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="0dp"
         android:text="@string/beats_display_view_annotation"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/numBeatsView" />
+        app:layout_constraintTop_toBottomOf="@+id/numBeatsView"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
 </android.support.constraint.ConstraintLayout>

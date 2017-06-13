@@ -11,39 +11,40 @@
         android:id="@+id/frequency"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
         android:text="Hello World"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/centsBar"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        tools:text="442.8 Hz"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintBottom_toTopOf="@+id/centsBar"
         app:layout_constraintTop_toBottomOf="@+id/noteName"
-        android:layout_marginTop="4dp" />
+        tools:text="442.8 Hz" />
 
     <TextView
         android:id="@+id/noteName"
         android:layout_width="123dp"
-        android:layout_height="106dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
+        android:textAlignment="center"
         android:textColor="@color/colorPrimary"
         android:textSize="96sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/frequency"
-        app:layout_constraintHorizontal_bias="0.636"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        tools:text="B" />
+        tools:text="C#" />
 
     <TextView
         android:id="@+id/noteOctave"
@@ -82,7 +83,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frequency" />
+        app:layout_constraintTop_toBottomOf="@+id/frequency"
+        android:layout_marginTop="24dp" />
 
 
 </android.support.constraint.ConstraintLayout>

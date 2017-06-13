@@ -141,13 +141,13 @@ class MetronomeFragment : Fragment() {
             if (!idk_youCanMakeAThICCC_t1ckIfUWant) {
                 // Make sure that the animation and the tone can't be heard
                 metronomeIsSilenced = true
-
+                metronomeTimer?.cancel()
                 metronomeButton.text = getString(R.string.metronome_start)
             }
             else {
                 // Make sure metronome can be heard
                 metronomeIsSilenced = false
-
+                startNewMetronome()
                 metronomeButton.text = getString(R.string.metronome_stop)
             }
         }

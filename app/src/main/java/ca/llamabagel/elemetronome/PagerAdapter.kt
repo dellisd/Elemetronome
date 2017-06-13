@@ -13,7 +13,7 @@ class PagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         return when (position) {
             0 -> MetronomeFragment.newInstance("M1")
             1 -> TunerFragment.newInstance("M2")
-            else -> MetronomeFragment.newInstance("M3")
+            else -> ToneGeneratorFragment.newInstance("M3")
         }
     }
 

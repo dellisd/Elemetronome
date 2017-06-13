@@ -85,30 +85,28 @@
 
     <Button
         android:id="@+id/decrementButton"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:text="@string/metronome_decrement"
         android:textSize="24sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tempoSeekBar"
         app:layout_constraintBottom_toBottomOf="@+id/metronomeButton"
-        app:layout_constraintVertical_bias="1.0"
-        app:layout_constraintRight_toLeftOf="@+id/metronomeButton" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/metronomeButton"
+        app:layout_constraintTop_toBottomOf="@+id/tempoSeekBar"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/incrementButton"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:text="@string/metronome_increment"
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/metronomeButton"
         app:layout_constraintLeft_toRightOf="@+id/metronomeButton"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tempoSeekBar"
-        app:layout_constraintBottom_toBottomOf="@+id/metronomeButton"
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView

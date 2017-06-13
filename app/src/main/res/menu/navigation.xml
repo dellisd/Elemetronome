@@ -12,8 +12,8 @@
         android:title="@string/title_tuner" />
 
     <item
-        android:id="@+id/navigation_tempo"
+        android:id="@+id/navigation_tone_generator"
         android:icon="@drawable/ic_queue_music_black_24dp"
-        android:title="@string/title_tempo" />
+        android:title="@string/title_tone_generator" />
 
 </menu>

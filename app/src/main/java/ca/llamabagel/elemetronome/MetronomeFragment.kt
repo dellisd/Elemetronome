@@ -1,5 +1,6 @@
 package ca.llamabagel.elemetronome
 
+import android.content.Context
 import android.media.AudioManager
 import android.media.ToneGenerator
 import android.media.ToneGenerator.TONE_DTMF_0
@@ -8,10 +9,12 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import kotlinx.android.synthetic.main.fragment_metronome.*
+import java.util.*
 
 /**
  * Created by derek on 5/24/2017.
@@ -39,6 +42,8 @@ class MetronomeFragment : Fragment() {
     private var animationDurationInMillis: Long = 0
 
     private var metronomeIsSilenced = true
+
+    private var beatTimer = Timer()
 
     // The default interval in ms (this is 120BPM)
     var interval: Long = 500
@@ -101,9 +106,19 @@ class MetronomeFragment : Fragment() {
 
         tempoSeekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                // Update BPM
+                BPM = progress + 1
 
+                bpmText.text = getString(R.string.metronome_tempo, BPM)
+
+                tempoName.text = TempoMarking.fromBpm(BPM).name
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 // Update interval
-                interval = ((60f / (progress + 1).toFloat()) * 1000f).toLong()
+                interval = ((60f / (BPM).toFloat()) * 1000f).toLong()
 
                 // Update animation duration
                 animationDurationInMillis = interval - 100
@@ -112,13 +127,6 @@ class MetronomeFragment : Fragment() {
                 if (idk_youCanMakeAThICCC_t1ckIfUWant) {
                     startNewMetronome()
                 }
-
-                // Update BPM
-                BPM = progress + 1
-
-                bpmText.text = getString(R.string.metronome_tempo, BPM)
-
-                tempoName.text = TempoMarking.fromBpm(BPM).name
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -153,6 +161,38 @@ class MetronomeFragment : Fragment() {
         }
         decrementButton.setOnClickListener { _ ->
             tempoSeekBar.progress--
+        }
+
+        // Increments the tempo when the increment button is held down
+        incrementButton.setOnTouchListener { _, motionEvent ->
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                beatTimer = Timer()
+                beatTimer.scheduleAtFixedRate(object : TimerTask() {
+                    override fun run() {
+                        tempoSeekBar.progress++
+                    }
+                }, 500, 50)
+            } else if (motionEvent.action == MotionEvent.ACTION_UP) {
+                beatTimer.cancel()
+            }
+
+            false
+        }
+
+        // Decrements the tempo when the decrement button is held down
+        decrementButton.setOnTouchListener { _, motionEvent ->
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                beatTimer = Timer()
+                beatTimer.scheduleAtFixedRate(object : TimerTask() {
+                    override fun run() {
+                        tempoSeekBar.progress--
+                    }
+                }, 500, 50)
+            } else if (motionEvent.action == MotionEvent.ACTION_UP) {
+                beatTimer.cancel()
+            }
+
+            false
         }
 
         // Update the display of number of beats

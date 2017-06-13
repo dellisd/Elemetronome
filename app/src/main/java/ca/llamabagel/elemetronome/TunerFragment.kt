@@ -8,6 +8,7 @@ import android.media.MediaRecorder
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.HandlerThread
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -19,66 +20,13 @@ import org.jtransforms.fft.DoubleFFT_1D
  * Created by derek on 5/25/2017.
  * Fragment for all tuner-related stuff
  */
-class TunerFragment() : Fragment() {
+class TunerFragment() : Fragment(), AsyncTuner.OnUpdateListener {
+
     private var audioRecord: AudioRecord? = null
 
-    private val handler = Handler()
-    /**
-     * Buffer size
-     */
-    private val minBufferSize = 8192
+    private var asyncTuner: AsyncTuner? = null
 
-    val runnable: Thread = object: Thread() {
-        override fun run() {
-            android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO)
-            val buffer = ShortArray(minBufferSize)
-            audioRecord?.read(buffer, 0, minBufferSize)
-            val fft = DoubleFFT_1D(minBufferSize.toLong())
-            var bufferD = DoubleArray(buffer.size) { buffer[it].toDouble() }
-            bufferD = lowPassFrequency(bufferD)
-            fft.realForward(bufferD)
-
-            // Find the index of the maximum magnitude
-            var max = Double.NEGATIVE_INFINITY
-            var maxIndex = 0
-            for (i in 1 until bufferD.size / 2) {
-                // The real component
-                val re = bufferD[2*i]
-                // The imaginary component
-                val im = bufferD[2*i+1]
-                val mag = Math.sqrt(re*re +im*im)
-
-                if (mag > max) {
-                    max = mag
-                    maxIndex = i
-                }
-            }
-
-            activity.runOnUiThread {
-                val pitchData = Note.note(maxIndex * SAMPLE_RATE.toDouble() / (bufferD.size))
-                noteName?.text = pitchData.note.first().letter
-                frequency?.text = context.getString(R.string.tuner_frequency, maxIndex * SAMPLE_RATE.toDouble() / (bufferD.size))
-                centsIndicator?.x = ((tunerActivity?.width?.toFloat()?.div(2f) as Float) + pitchData.tunefulness*(tunerActivity?.width?.toFloat()?.div(100f) as Float) - 10f).toFloat()
-                noteOctave?.text = pitchData.note.first().octave.toString()
-            }
-
-            handler.postDelayed(this, 100)
-        }
-    }
-
-    private fun lowPassFrequency(input: DoubleArray): DoubleArray {
-        val RC = 1.0 / (Note.C.frequency(7) * 2 *Math.PI)
-        val dt = 1.0 / SAMPLE_RATE.toDouble()
-        val alpha = dt / (RC + dt)
-        val output: DoubleArray = DoubleArray(input.size) {0.0}
-        output[0] = input[0]
-
-        for(i in 1 until output.size) {
-            output[i] = output[i - 1] + (alpha*(input[i] - output[i - 1]))
-        }
-
-        return output
-    }
+    val minBufferSize = 8192
 
     companion object {
         fun newInstance(text: String): TunerFragment {
@@ -101,6 +49,13 @@ class TunerFragment() : Fragment() {
         return inflater!!.inflate(R.layout.fragment_tuner, container, false)
     }
 
+    override fun update(frequency: Double, pitchData: Note.PitchData?) {
+        noteName?.text = pitchData?.note?.first()?.letter
+        this@TunerFragment.frequency?.text = context.getString(R.string.tuner_frequency, frequency)
+        centsIndicator?.x = pitchData?.tunefulness?.toFloat()!! * (tunerActivity?.width?.toFloat()!! / 100f) + (tunerActivity?.width?.toFloat()!!/2f - 10f)
+        noteOctave?.text = pitchData.note.first().octave.toString()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
 
@@ -108,6 +63,10 @@ class TunerFragment() : Fragment() {
             audioRecord?.stop()
             audioRecord?.release()
         }
+
+        // Clear tuner stuff
+        asyncTuner?.shouldRun = false
+        asyncTuner = null
     }
 
     override fun onPause() {
@@ -116,6 +75,10 @@ class TunerFragment() : Fragment() {
         if (audioRecord?.state == AudioRecord.STATE_INITIALIZED) {
             audioRecord?.stop()
         }
+
+        // Clear tuner stuff
+        asyncTuner?.shouldRun = false
+        asyncTuner = null
     }
 
     override fun onResume() {
@@ -141,12 +104,16 @@ class TunerFragment() : Fragment() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (activity.checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
                 getLiveAudioFeed()
-                if (runnable.state == Thread.State.NEW) runnable.start()
+
+                // Start tuning
+                asyncTuner = AsyncTuner(audioRecord, this)
+                asyncTuner?.execute()
 
             }
         } else {
             getLiveAudioFeed()
-            if (runnable.state == Thread.State.NEW) runnable.start()
+            asyncTuner = AsyncTuner(audioRecord, this)
+            asyncTuner?.execute()
         }
     }
 }

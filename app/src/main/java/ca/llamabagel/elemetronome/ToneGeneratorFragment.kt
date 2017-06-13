@@ -7,7 +7,9 @@ import android.media.ToneGenerator
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +19,7 @@ import kotlinx.android.synthetic.main.fragment_tone_generator.*
 import kotlin.experimental.and
 
 class ToneGeneratorFragment : Fragment() {
+    var playing: Boolean = false
     companion object {
         fun newInstance(text: String): ToneGeneratorFragment {
             val m = ToneGeneratorFragment()
@@ -74,16 +77,29 @@ class ToneGeneratorFragment : Fragment() {
             genTone()
             playSound()
         }
-        playSwitch.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
-            override fun onCheckedChanged(buttonView: CompoundButton?, isOn: Boolean) {
-                if (isOn) {
+
+        toneButton.setOnClickListener(object: View.OnClickListener {
+            override fun onClick(button: View?) {
+                if (!playing) {
+                    //playing = true
+                    //(button as FloatingActionButton).setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_pause_black_24dp))
                     val notes = Note.notes.filter {it.letter == noteSpinner.selectedItem.toString()}
-                    var note = notes.first()
+                    val note = notes.first()
                     note.octave = octaveSpinner.selectedItem.toString().toInt()
                     playTone(note)
-                } else {
+                }
+                else {
+                    playing = false
                 }
             }
         })
+        /*playSwitch.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
+            override fun onCheckedChanged(buttonView: CompoundButton?, isOn: Boolean) {
+                if (isOn) {
+
+                } else {
+                }
+            }
+        })*/
     }
 }

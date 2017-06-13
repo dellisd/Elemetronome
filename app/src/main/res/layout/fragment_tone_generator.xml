@@ -24,7 +24,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/octaveSpinnerTextView"
-        app:layout_constraintBottom_toTopOf="@+id/playSwitch" />
+        app:layout_constraintBottom_toTopOf="@+id/toneButton" />
 
     <TextView
         android:id="@+id/noteSpinnerTextView"
@@ -57,20 +57,18 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp" />
 
-    <Switch
-        android:id="@+id/playSwitch"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/toneButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:checked="false"
-        android:showText="true"
-        android:textOff="@string/play_switch"
-        android:textOn="@string/stop_switch"
+        android:clickable="true"
+        android:tint="@android:color/white"
+        app:backgroundTint="@color/colorPrimary"
+        app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:srcCompat="@drawable/ic_play_arrow_black_24dp"
         app:layout_constraintTop_toBottomOf="@+id/octaveSpinner" />
+
 </android.support.constraint.ConstraintLayout>

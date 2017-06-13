@@ -120,7 +120,7 @@ class MetronomeFragment : Fragment() {
         metronomeButton.setOnClickListener { _ ->
             idk_youCanMakeAThICCC_t1ckIfUWant = !idk_youCanMakeAThICCC_t1ckIfUWant
             if (!idk_youCanMakeAThICCC_t1ckIfUWant) {
-                backgroundImage.setAlpha(0.0f)
+                backgroundImage.alpha = 0.0f
 
                 // Make sure that the animation and the tone can't be heard
                 metronomeIsSilenced = true
@@ -128,7 +128,7 @@ class MetronomeFragment : Fragment() {
                 metronomeButton.text = getString(R.string.metronome_start)
             }
             else {
-                backgroundImage.setAlpha(0.4f)
+                backgroundImage.alpha = 0.4f
 
                 // Make sure metronome can be heard
                 metronomeIsSilenced = false

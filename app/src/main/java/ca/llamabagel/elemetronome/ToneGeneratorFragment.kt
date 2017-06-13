@@ -77,21 +77,8 @@ class ToneGeneratorFragment : Fragment() {
         playSwitch.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
             override fun onCheckedChanged(buttonView: CompoundButton?, isOn: Boolean) {
                 if (isOn) {
-                    var note: Note = Note.C
-                    when (noteSpinner.selectedItem) {
-                        "C" -> note = Note.C
-                        "C#" -> note = Note.C_SHARP
-                        "D" -> note = Note.D
-                        "D#" -> note = Note.D_SHARP
-                        "E" -> note = Note.E
-                        "F" -> note = Note.F
-                        "F#" -> note = Note.F_SHARP
-                        "G" -> note = Note.G
-                        "G#" -> note = Note.G_SHARP
-                        "A" -> note = Note.A
-                        "A#" -> note = Note.A_SHARP
-                        "B" -> note = Note.B
-                    }
+                    val notes = Note.notes.filter {it.letter == noteSpinner.selectedItem.toString()}
+                    var note = notes.first()
                     note.octave = octaveSpinner.selectedItem.toString().toInt()
                     playTone(note)
                 } else {

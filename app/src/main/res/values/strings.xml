@@ -12,6 +12,8 @@
     <string name="metronome_tick_display_desc">Displays a pulsating colour on tick</string>
     <string name="note_name_text_view">Note Name</string>
     <string name="octave_text_view">Octave</string>
+    <string name="play_switch">Play</string>
+    <string name="stop_switch">Stop</string>
     <string-array name="note_names">
         <item>C</item>
         <item>C#</item>

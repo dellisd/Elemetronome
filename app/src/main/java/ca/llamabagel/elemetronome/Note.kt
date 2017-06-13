@@ -10,7 +10,7 @@ package ca.llamabagel.elemetronome
  * @param simple Whether the note name associated is "simple". Like, who the hell uses B#?
  * @param octave The octave in which the note belongs. Default is 4 (like A4).
  */
-class Note(val value: Int, val letter: String, val simple: Boolean, val type: Type, var octave: Int = 4) {
+class Note(var value: Int, val letter: String, val simple: Boolean, val type: Type, var octave: Int = 4) {
     companion object {
         val B_SHARP = Note(0, "B#", false, Type.SHARP)
         val C = Note(0, "C", true, Type.NATURAL)

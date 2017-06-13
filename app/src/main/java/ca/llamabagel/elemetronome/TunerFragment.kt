@@ -52,7 +52,7 @@ class TunerFragment() : Fragment(), AsyncTuner.OnUpdateListener {
     override fun update(frequency: Double, pitchData: Note.PitchData?) {
         noteName?.text = pitchData?.note?.first()?.letter
         this@TunerFragment.frequency?.text = context.getString(R.string.tuner_frequency, frequency)
-        centsIndicator?.x = (pitchData?.tunefulness?.times((tunerActivity?.width?.toFloat()?.div(100f) as Float))?.plus((tunerActivity?.width?.toFloat()?.div(2f) as Float))?.minus(10f))?.toFloat() as Float
+        centsIndicator?.x = pitchData?.tunefulness?.toFloat()!! * (tunerActivity?.width?.toFloat()!! / 100f) + (tunerActivity?.width?.toFloat()!!/2f - 10f)
         noteOctave?.text = pitchData.note.first().octave.toString()
     }
 

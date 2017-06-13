@@ -117,6 +117,8 @@ class MetronomeFragment : Fragment() {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                beatsView.resetBeat()
+
                 // Update interval
                 interval = ((60f / (BPM).toFloat()) * 1000f).toLong()
 
@@ -127,12 +129,6 @@ class MetronomeFragment : Fragment() {
                 if (idk_youCanMakeAThICCC_t1ckIfUWant) {
                     startNewMetronome()
                 }
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                beatsView.resetBeat()
             }
         })
 
@@ -170,10 +166,24 @@ class MetronomeFragment : Fragment() {
                 beatTimer.scheduleAtFixedRate(object : TimerTask() {
                     override fun run() {
                         tempoSeekBar.progress++
+
                     }
                 }, 500, 50)
             } else if (motionEvent.action == MotionEvent.ACTION_UP) {
                 beatTimer.cancel()
+
+                beatsView.resetBeat()
+
+                // Update interval
+                interval = ((60f / (BPM).toFloat()) * 1000f).toLong()
+
+                // Update animation duration
+                animationDurationInMillis = interval - 100
+
+                // If the metronome is currently going
+                if (idk_youCanMakeAThICCC_t1ckIfUWant) {
+                    startNewMetronome()
+                }
             }
 
             false
@@ -190,6 +200,19 @@ class MetronomeFragment : Fragment() {
                 }, 500, 50)
             } else if (motionEvent.action == MotionEvent.ACTION_UP) {
                 beatTimer.cancel()
+
+                beatsView.resetBeat()
+
+                // Update interval
+                interval = ((60f / (BPM).toFloat()) * 1000f).toLong()
+
+                // Update animation duration
+                animationDurationInMillis = interval - 100
+
+                // If the metronome is currently going
+                if (idk_youCanMakeAThICCC_t1ckIfUWant) {
+                    startNewMetronome()
+                }
             }
 
             false

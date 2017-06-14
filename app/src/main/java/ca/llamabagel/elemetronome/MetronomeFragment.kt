@@ -58,33 +58,12 @@ class MetronomeFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         animationDurationInMillis = interval - 100
 
-        // Initialize the metronomeTimer
-        metronomeTimer = object: AccurateTimer(SystemClock.uptimeMillis(), interval) {
-            override fun onTick() {
-                if (!metronomeIsSilenced) {
-                    val toneToPlay = if (beatsView.selectedList[beatsView.currentBeat - 1]){
-                        TONE_DTMF_0
-                    } else {
-                        TONE_DTMF_1
-                    }
-                    toneGenerator.startTone(toneToPlay, toneDurationInMillis)
-
-                    beatsView.onTick(animationDurationInMillis)
-                }
-            }
-
-            override fun onFinish() {}
-        }
-
-        // Start the timer in the background
-        metronomeTimer?.start()
-
         fun startNewMetronome() {
             metronomeTimer?.cancel()
 
             metronomeTimer = object: AccurateTimer(SystemClock.uptimeMillis(), interval) {
                 override fun onTick() {
-                    if (!metronomeIsSilenced) {
+                    if (beatsView != null) {
                         val toneToPlay = if (beatsView.selectedList[beatsView.currentBeat - 1]){
                             TONE_DTMF_0
                         } else {
@@ -117,7 +96,7 @@ class MetronomeFragment : Fragment() {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                beatsView.resetBeat()
+                beatsView?.resetBeat()
 
                 // Update interval
                 interval = ((60f / (BPM).toFloat()) * 1000f).toLong()
@@ -139,14 +118,10 @@ class MetronomeFragment : Fragment() {
         metronomeButton.setOnClickListener { _ ->
             idk_youCanMakeAThICCC_t1ckIfUWant = !idk_youCanMakeAThICCC_t1ckIfUWant
             if (!idk_youCanMakeAThICCC_t1ckIfUWant) {
-                // Make sure that the animation and the tone can't be heard
-                metronomeIsSilenced = true
                 metronomeTimer?.cancel()
                 metronomeButton.text = getString(R.string.metronome_start)
             }
             else {
-                // Make sure metronome can be heard
-                metronomeIsSilenced = false
                 startNewMetronome()
                 metronomeButton.text = getString(R.string.metronome_stop)
             }
@@ -172,7 +147,7 @@ class MetronomeFragment : Fragment() {
             } else if (motionEvent.action == MotionEvent.ACTION_UP) {
                 beatTimer.cancel()
 
-                beatsView.resetBeat()
+                beatsView?.resetBeat()
 
                 // Update interval
                 interval = ((60f / (BPM).toFloat()) * 1000f).toLong()
@@ -201,7 +176,7 @@ class MetronomeFragment : Fragment() {
             } else if (motionEvent.action == MotionEvent.ACTION_UP) {
                 beatTimer.cancel()
 
-                beatsView.resetBeat()
+                beatsView?.resetBeat()
 
                 // Update interval
                 interval = ((60f / (BPM).toFloat()) * 1000f).toLong()
@@ -219,27 +194,39 @@ class MetronomeFragment : Fragment() {
         }
 
         // Update the display of number of beats
-        numBeatsView.setText(beatsView.numBeats.toString())
+        numBeatsView.setText(beatsView?.numBeats.toString())
 
         // Set the onClick listener for the beat increment and decrement buttons
         beatIncrementButton.setOnClickListener { _ ->
-            beatsView.resetBeat()
+            beatsView?.resetBeat()
 
             // Add another imageView
-            beatsView.numBeats = beatsView.numBeats + 1
+            beatsView?.numBeats = beatsView.numBeats.plus(1)
 
-            numBeatsView.setText(beatsView.numBeats.toString())
+            numBeatsView.setText(beatsView?.numBeats.toString())
         }
         beatDecrementButton.setOnClickListener { _ ->
-            beatsView.resetBeat()
+            beatsView?.resetBeat()
 
-            if (beatsView.numBeats > 1) {
+            if (beatsView != null && beatsView.numBeats > 1) {
                 // Remove an imageView
                 beatsView.numBeats = beatsView.numBeats - 1
             }
 
-            numBeatsView.setText(beatsView.numBeats.toString())
+            numBeatsView.setText(beatsView?.numBeats.toString())
         }
 
     }
+
+    override fun onResume() {
+        idk_youCanMakeAThICCC_t1ckIfUWant = false
+        super.onResume()
+    }
+
+    override fun onPause() {
+        metronomeTimer?.cancel()
+        super.onPause()
+    }
+
+
 }
